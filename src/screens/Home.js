@@ -1,86 +1,82 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   SafeAreaView,
   Image,
-  StyleSheet,
   TouchableOpacity,
+  FlatList,
   ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
+import Navbar from '../components/Navbar';
+import styles from '../styles/styles';
+import {ENTRIES1, ENTRIES2, ENTRIES3} from '../assets/json/Entries';
+import Carousel from '../components/Carousel';
 
 const Home = () => {
-  const cardData = [
-    {
-      id: 1,
-      images: require('../assets/Sqta.jpeg'),
-      title: 'Artificial Intelligence',
-    },
-    {
-      id: 2,
-      images: require('../assets/ds.jpeg'),
-      title: 'Data Structure',
-    },
-    {
-      id: 3,
-      images: require('../assets/cyberSecurity.jpeg'),
-      title: 'CyberSecurity',
-    },
-    {
-      id: 3,
-      images: require('../assets/Blockchain.jpeg'),
-      title: 'Blockchain',
-    },
-  ];
   const navigation = useNavigation();
-
   const navigateToDetail = () => {
     navigation.navigate('Details');
   };
 
+  const navigateToEvent = section => {
+    navigation.navigate(section);
+  };
+
+  const GridItem = React.memo(({item, onPress}) => (
+    <TouchableOpacity style={styles.parentCard} onPress={onPress}>
+      <View style={styles.card}>
+        <Image style={styles.images} source={{uri: item.image}} />
+        <Text style={styles.title}>{item.title}</Text>
+      </View>
+    </TouchableOpacity>
+  ));
+
+  const renderGridItem = ({item}) => (
+    <GridItem item={item} onPress={navigateToDetail} />
+  );
+
+  const renderSectionHeader = ({item}) => (
+    <View style={styles.header}>
+      <Text style={styles.text}>{item.section}</Text>
+      <TouchableOpacity onPress={() => navigateToEvent(item.key)}>
+        <Text style={styles.text2}>View All</Text>
+      </TouchableOpacity>
+    </View>
+  );
+
+  const data = [
+    {section: 'Upcoming Events', data: ENTRIES1, key: 'Events'},
+    {section: 'Upcoming Conference', data: ENTRIES2, key: 'Conference'},
+    {section: 'Upcoming News', data: ENTRIES3, key: 'News'},
+  ];
+
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <ScrollView style={styles.scrollViewContent}>
-          {cardData.map((card, index) => (
-            <TouchableOpacity key={index} onPress={navigateToDetail}>
-              <View style={styles.card}>
-                <Image source={card.images} />
-                <Text style={styles.text}>{card.title}</Text>
-              </View>
-            </TouchableOpacity>
-          ))}
-        </ScrollView>
+      <Navbar />
+      <View style={{padding: 5}}>
+        <Carousel />
       </View>
+      <FlatList
+        data={data}
+        keyExtractor={item => item.key}
+        renderItem={({item}) => (
+          <>
+            {renderSectionHeader({item})}
+            <View style={styles.home}>
+              <FlatList
+                horizontal={true}
+                data={item.data}
+                renderItem={renderGridItem}
+                keyExtractor={(item, index) => index.toString()}
+              />
+            </View>
+          </>
+        )}
+      />
     </SafeAreaView>
   );
 };
-
-const styles = StyleSheet.create({
-  safeArea: {
-    flex: 1,
-  },
-
-  card: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 1,
-    borderRadius: 10,
-    overflow: 'hidden',
-    margin: 28,
-  },
-  images: {
-    width: '100%',
-    objectFit: 'contain',
-    margin: 34,
-  },
-  text: {
-    fontSize: 20,
-    textAlign: 'center',
-    padding: 10,
-  },
-});
 
 export default Home;

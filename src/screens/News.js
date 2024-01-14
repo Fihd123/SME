@@ -1,6 +1,6 @@
-// BottomTabNavigator.js
-
+// News.js
 import React from 'react';
+import {View, Text, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -11,24 +11,27 @@ import Events from '../screens/Events';
 import Conference from '../screens/Conference';
 import Profile from '../screens/Profile';
 
-const Tab = createBottomTabNavigator();
+function NewsComponent() {
+  return (
+    <View>
+      <Text>News Component</Text>
+    </View>
+  );
+}
 
-const BottomTabNavigator = () => {
+const News = () => {
+  const Tab = createBottomTabNavigator();
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: 'blue',
-        tabBarInactiveTintColor: 'grey',
         headerShown: false,
       }}>
       <Tab.Screen
-        name="Home"
-        component={Home}
+        name="News"
+        component={NewsComponent}
         options={{
           tabBarLabel: 'Home',
-          tabBarIcon: ({color, size}) => (
-            <FontAwesome name="home" size={size} color={color} />
-          ),
+          tabBarIcon: ({size}) => <FontAwesome name="home" size={size} />,
         }}
       />
       <Tab.Screen
@@ -75,4 +78,21 @@ const BottomTabNavigator = () => {
   );
 };
 
-export default BottomTabNavigator;
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  content: {
+    flex: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  title: {
+    fontSize: 40,
+  },
+  tabNavigator: {
+    flex: 2,
+  },
+});
+
+export default News;

@@ -5,6 +5,10 @@ import Home from './src/screens/Home';
 import SplashScreen from './src/screens/SplashScreen';
 import BottomTabNavigator from './src/components/BottomTabNavigator';
 import CardDetails from './src/components/CardDetails';
+import Navbar from './src/components/Navbar';
+import Events from './src/screens/Events';
+import Conference from './src/screens/Conference';
+import News from './src/screens/News';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -14,13 +18,46 @@ const App = () => {
       <Stack.Navigator
         initialRouteName="SplashScreen"
         screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="Home" component={Home} />
+        <Stack.Screen
+          name="SplashScreen"
+          component={SplashScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Navbar"
+          component={Navbar}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Home"
+          component={Home}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="BottomTabNavigator"
           component={BottomTabNavigator}
+          options={{headerShown: false}}
         />
-        <Stack.Screen name="Details" component={CardDetails} />
+        <Stack.Screen
+          name="Details"
+          component={CardDetails}
+          options={{headerShown: false}}
+        />
+        {/* <Stack.Screen
+          name="Event"
+          component={Events}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Conference"
+          component={Conference}
+          options={{headerShown: false}}
+        /> */}
+        <Stack.Screen
+          name="News"
+          component={News}
+          options={{headerShown: false}}
+        />
       </Stack.Navigator>
     </NavigationContainer>
   );
