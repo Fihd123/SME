@@ -23,12 +23,12 @@ const EventCard = ({item, onPress}) => (
 );
 
 function ForthComingEvents({navigation}) {
-  const navigateToDetail = () => {
-    navigation.navigate('Details');
+  const navigateToDetail = item => {
+    navigation.navigate('Details', {item});
   };
 
   const renderGridItem = ({item}) => (
-    <EventCard item={item} onPress={navigateToDetail} />
+    <EventCard item={item} onPress={() => navigateToDetail(item)} />
   );
 
   return (
@@ -44,12 +44,12 @@ function ForthComingEvents({navigation}) {
 }
 
 function PastEvents({navigation}) {
-  const navigateToDetail = () => {
-    navigation.navigate('Details');
+  const navigateToDetail = item => {
+    navigation.navigate('Details', {item});
   };
 
   const renderGridItem = ({item}) => (
-    <EventCard item={item} onPress={navigateToDetail} />
+    <EventCard item={item} onPress={() => navigateToDetail(item)} />
   );
 
   return (

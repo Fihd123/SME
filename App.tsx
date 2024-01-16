@@ -43,16 +43,7 @@ const App = () => {
           component={CardDetails}
           options={{headerShown: false}}
         />
-        {/* <Stack.Screen
-          name="Event"
-          component={Events}
-          options={{headerShown: false}}
-        />
-        <Stack.Screen
-          name="Conference"
-          component={Conference}
-          options={{headerShown: false}}
-        /> */}
+
         <Stack.Screen
           name="News"
           component={News}

@@ -1,4 +1,3 @@
-// News.js
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -6,7 +5,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Home from '../screens/Home';
-import ContactScreen from '../screens/Contact'; // Corrected import
+import ContactScreen from '../screens/Contact';
 import Events from '../screens/Events';
 import Conference from '../screens/Conference';
 import Profile from '../screens/Profile';
@@ -14,7 +13,7 @@ import Profile from '../screens/Profile';
 function NewsComponent() {
   return (
     <View>
-      <Text>News Component</Text>
+      <Text>News Component 2</Text>
     </View>
   );
 }
@@ -27,16 +26,17 @@ const News = () => {
         headerShown: false,
       }}>
       <Tab.Screen
-        name="News"
+        name="NewsTab"
         component={NewsComponent}
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({size}) => <FontAwesome name="home" size={size} />,
         }}
       />
+
       <Tab.Screen
         name="Contact"
-        component={ContactScreen} // Corrected component name
+        component={ContactScreen}
         options={{
           tabBarLabel: 'Contact',
           tabBarIcon: ({color, size}) => (

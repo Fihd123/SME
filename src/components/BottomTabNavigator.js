@@ -1,12 +1,10 @@
-// BottomTabNavigator.js
-
 import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Home from '../screens/Home';
-import ContactScreen from '../screens/Contact'; // Corrected import
+import ContactScreen from '../screens/Contact';
 import Events from '../screens/Events';
 import Conference from '../screens/Conference';
 import Profile from '../screens/Profile';
@@ -33,7 +31,7 @@ const BottomTabNavigator = () => {
       />
       <Tab.Screen
         name="Contact"
-        component={ContactScreen} // Corrected component name
+        component={ContactScreen}
         options={{
           tabBarLabel: 'Contact',
           tabBarIcon: ({color, size}) => (

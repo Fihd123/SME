@@ -16,8 +16,9 @@ import Carousel from '../components/Carousel';
 
 const Home = () => {
   const navigation = useNavigation();
-  const navigateToDetail = () => {
-    navigation.navigate('Details');
+
+  const navigateToDetail = item => {
+    navigation.navigate('Details', {item});
   };
 
   const navigateToEvent = section => {
@@ -28,13 +29,13 @@ const Home = () => {
     <TouchableOpacity style={styles.parentCard} onPress={onPress}>
       <View style={styles.card}>
         <Image style={styles.images} source={{uri: item.image}} />
-        <Text style={styles.title}>{item.title}</Text>
+        <Text style={styles.title}>{item.title.slice(0, 20)}...</Text>
       </View>
     </TouchableOpacity>
   ));
 
   const renderGridItem = ({item}) => (
-    <GridItem item={item} onPress={navigateToDetail} />
+    <GridItem item={item} onPress={() => navigateToDetail(item)} />
   );
 
   const renderSectionHeader = ({item}) => (
@@ -44,6 +45,20 @@ const Home = () => {
         <Text style={styles.text2}>View All</Text>
       </TouchableOpacity>
     </View>
+  );
+
+  const renderItem = ({item}) => (
+    <>
+      {renderSectionHeader({item})}
+      <View style={styles.home}>
+        <FlatList
+          horizontal={true}
+          data={item.data}
+          renderItem={renderGridItem}
+          keyExtractor={(item, index) => index.toString()}
+        />
+      </View>
+    </>
   );
 
   const data = [
@@ -61,19 +76,7 @@ const Home = () => {
       <FlatList
         data={data}
         keyExtractor={item => item.key}
-        renderItem={({item}) => (
-          <>
-            {renderSectionHeader({item})}
-            <View style={styles.home}>
-              <FlatList
-                horizontal={true}
-                data={item.data}
-                renderItem={renderGridItem}
-                keyExtractor={(item, index) => index.toString()}
-              />
-            </View>
-          </>
-        )}
+        renderItem={renderItem}
       />
     </SafeAreaView>
   );

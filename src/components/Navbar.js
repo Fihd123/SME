@@ -4,7 +4,7 @@ import {View, Text, StyleSheet} from 'react-native';
 const Navbar = () => {
   return (
     <View style={styles.navbar}>
-      <Text style={styles.navbarText}>Hello</Text>
+      <Text style={styles.navbarText}>Navbar</Text>
     </View>
   );
 };

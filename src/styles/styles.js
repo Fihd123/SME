@@ -19,6 +19,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
+    marginBottom: 15,
   },
   card: {
     width: 110,
