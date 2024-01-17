@@ -1,64 +1,66 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useEffect} from 'react';
-
-import {View, Text, Image, StyleSheet} from 'react-native';
+import React from 'react';
+import HTML from 'react-native-render-html';
+import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
 
 const CardDetails = ({route}) => {
   const {item} = route.params;
   const navigation = useNavigation();
-
   const navigateToHome = () => {
     const startTime = Date.now();
-
-    // navigation.navigate('Home');
     navigation.goBack();
     const endTime = Date.now();
     console.log('Navigation took', endTime - startTime, 'milliseconds');
   };
 
   return (
-    <View>
+    <View style={styles.container}>
       <Text style={styles.cut} onPress={() => navigateToHome()}>
         x
       </Text>
       <View style={styles.imageContainer}>
         <Image style={styles.image} source={{uri: item.image}} />
       </View>
-      <View style={styles.container}>
-        <Text style={styles.title}> {item.title}</Text>
-        <Text style={styles.desc}>desc- {item.description}</Text>
+      <View style={styles.detailsContainer}>
+        <Text style={styles.title}>{item.title}</Text>
+        <View style={styles.descContainer}>
+          <HTML source={{html: item.description}} baseStyle={{fontSize: 18}} />
+        </View>
       </View>
     </View>
   );
 };
 
-export default CardDetails;
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
   imageContainer: {
-    opacity: 0.8, // Set opacity for the image container
+    opacity: 0.8,
   },
   image: {
     width: '100%',
     height: 230,
   },
-  container: {
+  detailsContainer: {
     backgroundColor: '#e7dfdf',
-    paddingVertical: 10,
+    padding: 15,
     margin: 15,
     borderRadius: 15,
+    maxHeight: '80%', // Set a maximum height for the container
   },
   title: {
-    margin: 15,
     fontWeight: 'bold',
     fontSize: 25,
     borderRadius: 15,
   },
+
   desc: {
-    paddingHorizontal: 20,
     fontWeight: '400',
     fontSize: 20,
     borderRadius: 15,
+    flexWrap: 'wrap', // Allow the text to wrap to the next line
+    width: '80%',
   },
   cut: {
     position: 'absolute',
@@ -69,3 +71,5 @@ const styles = StyleSheet.create({
     left: 10,
   },
 });
+
+export default CardDetails;

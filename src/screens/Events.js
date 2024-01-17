@@ -12,6 +12,7 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import Navbar from '../components/Navbar';
 import styles from '../styles/styles';
 import {ENTRIES1, ENTRIES2} from '../assets/json/Entries';
+import HTML from 'react-native-render-html';
 
 const EventCard = ({item, onPress}) => (
   <TouchableOpacity style={styles.parentCard} onPress={onPress}>
@@ -63,7 +64,13 @@ function PastEvents({navigation}) {
     </View>
   );
 }
-
+export const EntriesComponent = ({entries}) => (
+  <>
+    {entries.map((entry, index) => (
+      <HTML key={index} value={entry.description} />
+    ))}
+  </>
+);
 const Events = () => {
   const Tab = createMaterialTopTabNavigator();
 

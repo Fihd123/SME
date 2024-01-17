@@ -1,7 +1,9 @@
 export const ENTRIES1 = [
   {
     title: 'Beautiful and dramatic Antelope Canyon',
-    description: 'Lorem ipsum dolor sit amet et nuncat mergitur',
+    description:
+      '<h1>this is heading  </h1> Lorem ipsum dolor sit amet et <I>lokesh </I>nuncat mergitur <br/> Beautiful and dramatic Antelope Canyon <strong>Beautiful code </strong>',
+
     image: 'https://i.imgur.com/UYiroysl.jpg',
   },
   {
