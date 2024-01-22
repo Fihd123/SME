@@ -19,12 +19,12 @@ const CardDetails = ({route}) => {
         x
       </Text>
       <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{uri: item.image}} />
+        <Image style={styles.image} source={{uri: item.thumbnail}} />
       </View>
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{item.title}</Text>
         <View style={styles.descContainer}>
-          <HTML source={{html: item.description}} baseStyle={{fontSize: 18}} />
+          <HTML source={{html: item.long_desc}} baseStyle={{fontSize: 18}} />
         </View>
       </View>
     </View>

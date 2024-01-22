@@ -5,8 +5,8 @@ import * as Animatable from 'react-native-animatable';
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('BottomTabNavigator');
-    }, 3000);
+      navigation.navigate('Login');
+    }, 2000);
   }, []);
 
   return (

@@ -6,9 +6,9 @@ import SplashScreen from './src/screens/SplashScreen';
 import BottomTabNavigator from './src/components/BottomTabNavigator';
 import CardDetails from './src/components/CardDetails';
 import Navbar from './src/components/Navbar';
-import Events from './src/screens/Events';
-import Conference from './src/screens/Conference';
 import News from './src/screens/News';
+import Login from './src/screens/Login';
+import SignUp from './src/screens/SignUp';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -21,6 +21,16 @@ const App = () => {
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Signup"
+          component={SignUp}
           options={{headerShown: false}}
         />
         <Stack.Screen
