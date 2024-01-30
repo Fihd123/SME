@@ -9,6 +9,7 @@ import Navbar from './src/components/Navbar';
 import News from './src/screens/News';
 import Login from './src/screens/Login';
 import SignUp from './src/screens/SignUp';
+import Profile from './src/screens/Profile';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
@@ -17,7 +18,9 @@ const App = () => {
     <NavigationContainer>
       <Stack.Navigator
         initialRouteName="SplashScreen"
-        screenOptions={{headerShown: false}}>
+        screenOptions={{
+          headerShown: false,
+        }}>
         <Stack.Screen
           name="SplashScreen"
           component={SplashScreen}
@@ -57,6 +60,11 @@ const App = () => {
         <Stack.Screen
           name="News"
           component={News}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Profile"
+          component={Profile}
           options={{headerShown: false}}
         />
       </Stack.Navigator>

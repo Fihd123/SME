@@ -5,6 +5,22 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  imagesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 20,
+  },
+  logo: {
+    width: 60,
+    height: 60,
+    borderRadius: 25,
+  },
+  profile: {
+    width: 45,
+    height: 45,
+    borderRadius: 25,
+  },
   header: {
     flex: 0,
     justifyContent: 'space-between',
@@ -17,40 +33,47 @@ const styles = StyleSheet.create({
   },
   parentCard: {
     flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginStart: 10,
     flexDirection: 'row',
     flexWrap: 'wrap',
     marginBottom: 15,
   },
   card: {
     width: 110,
-    alignItems: 'center',
-    backgroundColor: '#dcdcdc',
+    alignItems: 'left',
+    // backgroundColor: '#dcdcdc',
     margin: 5,
-    paddingHorizontal: 3,
-    paddingVertical: 10,
     borderRadius: 10,
   },
 
   title: {
     fontSize: 13,
-    textAlign: 'center',
+    padding: 3,
+    textAlign: 'left',
   },
-
+  desc: {
+    fontWeight: 'bold',
+  },
   text: {
     fontSize: 18,
     color: 'black',
-    fontWeight: 'bold',
+    fontWeight: '400',
     textAlign: 'center',
   },
   text2: {
     fontSize: 18,
     fontWeight: 'bold',
     color: 'blue',
+    backgroundColor: '#dedbd4',
+    padding: 5,
+    borderRadius: 20,
     textAlign: 'center',
   },
 
   images: {
-    width: 95,
+    width: 100,
     height: 100,
     borderRadius: 10,
   },

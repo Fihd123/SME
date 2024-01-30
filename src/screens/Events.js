@@ -19,15 +19,15 @@ const EventCard = ({item, onPress}) => (
   <TouchableOpacity style={styles.parentCard} onPress={onPress}>
     <View style={[styles.card, style.eventCard]}>
       <Image style={styles.images} source={{uri: item.thumbnail}} />
-      <Text style={styles.title}>{item.title}</Text>
-      <Text style={styles.title}>{item.id}</Text>
+      <Text style={styles.title}>{item.title.slice(0, 20)} ...</Text>
+      {/* <Text style={styles.title}>{item.id}</Text> */}
     </View>
   </TouchableOpacity>
 );
 
 function ForthComingEvents({navigation}) {
   const navigateToDetail = item => {
-    navigation.navigate('Details', {item});
+    navigation.navigate('Details', {itemId: item.id, item});
   };
 
   const renderGridItem = ({item}) => (
@@ -50,7 +50,7 @@ function PastEvents({navigation}) {
   const [pastEvents, setPastEvents] = useState([]);
 
   const navigateToDetail = item => {
-    navigation.navigate('Details', {item});
+    navigation.navigate('Details', {itemId: item.id, item});
   };
 
   const renderGridItem = ({item}) => (
@@ -79,6 +79,9 @@ function PastEvents({navigation}) {
           console.log(response);
           console.log('User token', userToken);
           setPastEvents(data);
+          data.forEach(item => {
+            console.log('Event ID:', item.id);
+          });
         } else {
           console.error('Error fetching data:', response.statusText);
         }
@@ -147,6 +150,6 @@ export default Events;
 
 const style = StyleSheet.create({
   eventCard: {
-    marginTop: 18,
+    marginTop: 25,
   },
 });

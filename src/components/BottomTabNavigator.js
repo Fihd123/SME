@@ -8,6 +8,7 @@ import ContactScreen from '../screens/Contact';
 import Events from '../screens/Events';
 import Conference from '../screens/Conference';
 import Profile from '../screens/Profile';
+import {View} from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -15,9 +16,23 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: 'blue',
+        tabBarActiveTintColor: 'black',
         tabBarInactiveTintColor: 'grey',
         headerShown: false,
+        tabBarStyle: {
+          borderTopLeftRadius: 50,
+          borderTopRightRadius: 50,
+          height: 80,
+          padding: 20,
+          zIndex: 1,
+          // flexDirection: 'row', // Add this line
+          // justifyContent: 'space-around', // Add this line
+          // alignItems: 'center', // Add this line
+        },
+        tabBarLabelStyle: {
+          fontSize: 12,
+          paddingBottom: 10,
+        },
       }}>
       <Tab.Screen
         name="Home"

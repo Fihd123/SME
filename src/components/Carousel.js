@@ -1,31 +1,34 @@
-// Carousel component
-
-import React, {useRef} from 'react';
-import {View, StyleSheet} from 'react-native';
+import React from 'react';
+import {View, StyleSheet, Dimensions, Image} from 'react-native';
+import Carousel, {Pagination} from 'react-native-snap-carousel';
 import {ENTRIES1} from '../assets/json/Entries';
-import {SliderBox} from 'react-native-image-slider-box';
 
-const Carousel = () => {
+const {width: screenWidth} = Dimensions.get('window');
+
+const CarouselComponent = () => {
   const images = Array.isArray(ENTRIES1)
     ? ENTRIES1.map(entry => entry.image)
     : [];
 
-  const sliderRef = useRef(null);
+  const renderItem = ({item}) => {
+    return (
+      <View style={styles.imageHolder}>
+        <Image source={{uri: item}} style={styles.image} />
+      </View>
+    );
+  };
 
   return (
-    <View style={styles.imageHolder}>
-      <SliderBox
-        ref={sliderRef}
-        images={images}
-        dotColor="#FFEE58"
-        inactiveDotColor="#90A4AE"
-        paginationBoxVerticalPadding={20}
+    <View>
+      <Carousel
+        data={images}
+        renderItem={renderItem}
+        sliderWidth={screenWidth}
+        itemWidth={screenWidth} // Width of the carousel
+        layout="default"
+        loop
         autoplay
-        circleLoop
         autoplayInterval={2000}
-        imageLoadingColor="#2196F3"
-        resizeMethod="resize"
-        resizeMode="cover"
       />
     </View>
   );
@@ -33,11 +36,19 @@ const Carousel = () => {
 
 const styles = StyleSheet.create({
   imageHolder: {
+    width: screenWidth - 20,
     height: 200,
-    margin: 5,
+    marginHorizontal: 10,
     borderRadius: 10,
     overflow: 'hidden',
   },
+  image: {
+    flex: 1,
+    width: '96vw',
+    height: '100%',
+    resizeMode: 'stretch',
+    borderRadius: 10,
+  },
 });
 
-export default Carousel;
+export default CarouselComponent;

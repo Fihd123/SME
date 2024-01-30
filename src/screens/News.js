@@ -24,6 +24,8 @@ const News = () => {
     <Tab.Navigator
       screenOptions={{
         headerShown: false,
+        tabBarActiveTintColor: 'black',
+        tabBarInactiveTintColor: 'grey',
       }}>
       <Tab.Screen
         name="NewsTab"

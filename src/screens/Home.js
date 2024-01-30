@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -9,16 +9,20 @@ import {
   ScrollView,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
-import Navbar from '../components/Navbar';
 import styles from '../styles/styles';
 import {ENTRIES1, ENTRIES2, ENTRIES3} from '../assets/json/Entries';
+import AntDesign from 'react-native-vector-icons/AntDesign';
 import Carousel from '../components/Carousel';
-
+import SME from '../assets/SME_LOGO.png';
+import profileLogo from '../assets/profile.png';
 const Home = () => {
   const navigation = useNavigation();
 
   const navigateToDetail = item => {
     navigation.navigate('Details', {item});
+  };
+  const navigateToProfile = item => {
+    navigation.navigate('Profile');
   };
 
   const navigateToEvent = section => {
@@ -29,7 +33,8 @@ const Home = () => {
     <TouchableOpacity style={styles.parentCard} onPress={onPress}>
       <View style={styles.card}>
         <Image style={styles.images} source={{uri: item.image}} />
-        <Text style={styles.title}>{item.title.slice(0, 20)}...</Text>
+        <Text style={styles.title}>{item.title.slice(0, 10)}</Text>
+        <Text style={styles.desc}>{item.description.slice(0, 20)}...</Text>
       </View>
     </TouchableOpacity>
   ));
@@ -42,7 +47,9 @@ const Home = () => {
     <View style={styles.header}>
       <Text style={styles.text}>{item.section}</Text>
       <TouchableOpacity onPress={() => navigateToEvent(item.key)}>
-        <Text style={styles.text2}>View All</Text>
+        <Text style={styles.text2}>
+          <AntDesign name="right" size={25} color="white" />
+        </Text>
       </TouchableOpacity>
     </View>
   );
@@ -62,17 +69,25 @@ const Home = () => {
   );
 
   const data = [
-    {section: 'Upcoming Events', data: ENTRIES1, key: 'Events'},
-    {section: 'Upcoming Conference', data: ENTRIES2, key: 'Conference'},
-    {section: 'Upcoming News', data: ENTRIES3, key: 'News'},
+    {section: 'UPCOMING EVENTS', data: ENTRIES1, key: 'Events'},
+    {section: 'UPCOMING CONFERENCE', data: ENTRIES2, key: 'Conference'},
+    {section: 'UPCOMING NEWS', data: ENTRIES3, key: 'News'},
   ];
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Navbar />
-      <View style={{padding: 5}}>
+      <View style={styles.imagesContainer}>
+        <Image source={SME} style={styles.logo} />
+        <TouchableOpacity
+          style={styles.profileContainer}
+          onPress={navigateToProfile}>
+          <Image source={profileLogo} style={styles.profile} />
+        </TouchableOpacity>
+      </View>
+      <View>
         <Carousel />
       </View>
+
       <FlatList
         data={data}
         keyExtractor={item => item.key}

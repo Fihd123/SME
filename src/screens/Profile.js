@@ -1,10 +1,27 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
 
 const Profile = () => {
   const navigation = useNavigation();
+  const [userEmail, setUserEmail] = useState(null);
+  const [userToken, setUserToken] = useState(null);
+
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      try {
+        const email = await AsyncStorage.getItem('userEmail');
+        const userToken = await AsyncStorage.getItem('userToken');
+        setUserEmail(email);
+        setUserToken(userToken);
+      } catch (error) {
+        console.error('Error fetching user email from AsyncStorage:', error);
+      }
+    };
+
+    fetchUserEmail();
+  }, []);
 
   const navigateToLogin = () => {
     navigation.navigate('Login');
@@ -27,7 +44,14 @@ const Profile = () => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Profile Page</Text>
-
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Text style={{fontSize: 17}}>Email - {userEmail}</Text>
+        <Text style={{fontSize: 17, margin: 15}}>Token - {userToken}</Text>
+      </View>
       <TouchableOpacity style={styles.button} onPress={navigateToLogin}>
         <Text>Login</Text>
       </TouchableOpacity>

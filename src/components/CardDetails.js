@@ -1,11 +1,22 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 import HTML from 'react-native-render-html';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  ScrollView,
+  Dimensions,
+} from 'react-native';
+import axios from 'axios';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const CardDetails = ({route}) => {
-  const {item} = route.params;
+  const [details, setDetails] = useState([]);
+  const {itemId} = route.params;
   const navigation = useNavigation();
+
   const navigateToHome = () => {
     const startTime = Date.now();
     navigation.goBack();
@@ -13,20 +24,76 @@ const CardDetails = ({route}) => {
     console.log('Navigation took', endTime - startTime, 'milliseconds');
   };
 
+  const viewSignleEvent = async () => {
+    try {
+      console.log(itemId);
+      const userToken = await AsyncStorage.getItem('userToken');
+      const response = await fetch(
+        `https://smeapp.havock.org/api/view-event/${itemId}?`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        },
+      );
+      if (response.ok) {
+        const data = await response.json();
+        setDetails(data);
+        console.log(data);
+      } else {
+        console.log('error while details page rendering... ');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    viewSignleEvent();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.cut} onPress={() => navigateToHome()}>
         x
       </Text>
-      <View style={styles.imageContainer}>
-        <Image style={styles.image} source={{uri: item.thumbnail}} />
-      </View>
-      <View style={styles.detailsContainer}>
-        <Text style={styles.title}>{item.title}</Text>
-        <View style={styles.descContainer}>
-          <HTML source={{html: item.long_desc}} baseStyle={{fontSize: 18}} />
-        </View>
-      </View>
+      {details && details.length > 0 && (
+        <>
+          {details.map((detail, index) => (
+            <View key={index}>
+              <View style={styles.imageContainer}>
+                <Image style={styles.image} source={{uri: detail.thumbnail}} />
+              </View>
+              <View style={styles.detailsContainer}>
+                <Text style={styles.title}>{detail.title}</Text>
+                {detail.media && detail.media.length > 0 && (
+                  <View>
+                    {detail.media.map(mediaItem => (
+                      <Text key={mediaItem.id} style={styles.title}>
+                        {mediaItem.collection_name}
+                      </Text>
+                    ))}
+                  </View>
+                )}
+                <View>
+                  <HTML
+                    source={{html: detail.long_desc}}
+                    baseStyle={{fontSize: 18}}
+                    contentWidth={Dimensions.get('window').width}
+                  />
+                  <HTML
+                    source={{html: detail.short_desc}}
+                    baseStyle={{fontSize: 18}}
+                    contentWidth={Dimensions.get('window').width}
+                  />
+                </View>
+              </View>
+            </View>
+          ))}
+        </>
+      )}
     </View>
   );
 };
@@ -43,7 +110,7 @@ const styles = StyleSheet.create({
     height: 230,
   },
   detailsContainer: {
-    backgroundColor: '#e7dfdf',
+    // backgroundColor: '#e7dfdf',
     padding: 15,
     margin: 15,
     borderRadius: 15,
