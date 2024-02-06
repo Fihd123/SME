@@ -110,11 +110,10 @@ const styles = StyleSheet.create({
     height: 230,
   },
   detailsContainer: {
-    // backgroundColor: '#e7dfdf',
     padding: 15,
     margin: 15,
     borderRadius: 15,
-    maxHeight: '80%', // Set a maximum height for the container
+    maxHeight: '80%',
   },
   title: {
     fontWeight: 'bold',
@@ -126,7 +125,7 @@ const styles = StyleSheet.create({
     fontWeight: '400',
     fontSize: 20,
     borderRadius: 15,
-    flexWrap: 'wrap', // Allow the text to wrap to the next line
+    flexWrap: 'wrap',
     width: '80%',
   },
   cut: {

@@ -67,14 +67,14 @@ export const ENTRIES2 = [
 ];
 export const ENTRIES3 = [
   {
-    title: 'Favourites landscapes 1',
-    description: 'Lorem ipsum dolor sit amet',
-    image: 'https://i.imgur.com/SsJmZ9jl.jpg',
-  },
-  {
     title: 'Favourites landscapes 2',
     description: 'Lorem ipsum dolor sit amet et nuncat mergitur',
     image: 'https://i.imgur.com/5tj6S7Ol.jpg',
+  },
+  {
+    title: 'Favourites landscapes 1',
+    description: 'Lorem ipsum dolor sit amet',
+    image: 'https://i.imgur.com/SsJmZ9jl.jpg',
   },
   {
     title: 'Favourites landscapes 3',

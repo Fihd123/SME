@@ -25,9 +25,6 @@ const BottomTabNavigator = () => {
           height: 80,
           padding: 20,
           zIndex: 1,
-          // flexDirection: 'row', // Add this line
-          // justifyContent: 'space-around', // Add this line
-          // alignItems: 'center', // Add this line
         },
         tabBarLabelStyle: {
           fontSize: 12,

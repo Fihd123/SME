@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
+    backgroundColor: '#eae9e5',
   },
 
   imagesContainer: {
@@ -35,16 +36,13 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginStart: 10,
+    marginLeft: 15,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    marginBottom: 15,
   },
   card: {
     width: 110,
     alignItems: 'left',
-    // backgroundColor: '#dcdcdc',
-    margin: 5,
     borderRadius: 10,
   },
 
@@ -73,7 +71,7 @@ const styles = StyleSheet.create({
   },
 
   images: {
-    width: 100,
+    width: 105,
     height: 100,
     borderRadius: 10,
   },

@@ -15,10 +15,21 @@ import {ENTRIES1, ENTRIES2} from '../assets/json/Entries';
 import HTML from 'react-native-render-html';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+const defaultImage = [
+  {
+    image: 'https://i.imgur.com/UYiroysl.jpg',
+  },
+];
+
 const EventCard = ({item, onPress}) => (
   <TouchableOpacity style={styles.parentCard} onPress={onPress}>
     <View style={[styles.card, style.eventCard]}>
-      <Image style={styles.images} source={{uri: item.thumbnail}} />
+      <Image
+        style={styles.images}
+        source={
+          item.thumbnail ? {uri: item.thumbnail} : {uri: defaultImage[0].image}
+        }
+      />
       <Text style={styles.title}>{item.title.slice(0, 20)} ...</Text>
       {/* <Text style={styles.title}>{item.id}</Text> */}
     </View>
