@@ -1,25 +1,25 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import {View, Text, Image, TouchableOpacity} from 'react-native';
+import styles from '../styles/styles';
+import SME from '../assets/SME_LOGO.png';
+import {useNavigation} from '@react-navigation/native';
+import profileLogo from '../assets/profile.png';
 
 const Navbar = () => {
+  const navigation = useNavigation();
+  const navigateToProfile = () => {
+    navigation.navigate('Profile');
+  };
   return (
-    <View style={styles.navbar}>
-      <Text style={styles.navbarText}>Navbar</Text>
+    <View style={styles.imagesContainer}>
+      <Image source={SME} style={styles.logo} />
+      <TouchableOpacity
+        style={styles.profileContainer}
+        onPress={navigateToProfile}>
+        <Image source={profileLogo} style={styles.profile} />
+      </TouchableOpacity>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  navbar: {
-    backgroundColor: '#1b0083',
-    height: 60,
-    justifyContent: 'center',
-  },
-  navbarText: {
-    fontSize: 20,
-    left: 12,
-    color: 'white',
-  },
-});
 
 export default Navbar;

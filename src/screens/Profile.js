@@ -1,7 +1,17 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
-import {View, Text, TouchableOpacity, StyleSheet} from 'react-native';
+import AntDesign from 'react-native-vector-icons/AntDesign';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from 'react-native';
+import Navbar from '../components/Navbar';
+import logo from '../assets/SME_LOGO.png';
 
 const Profile = () => {
   const navigation = useNavigation();
@@ -42,42 +52,71 @@ const Profile = () => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Profile Page</Text>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Text style={{fontSize: 17}}>Email - {userEmail}</Text>
-        <Text style={{fontSize: 17, margin: 15}}>Token - {userToken}</Text>
+    <View style={{flex: 1}}>
+      <View style={{height: 80, paddingBottom: 10}}>
+        <Navbar />
       </View>
-      <TouchableOpacity style={styles.button} onPress={navigateToLogin}>
-        <Text>Login</Text>
-      </TouchableOpacity>
+      <ScrollView contentContainerStyle={styles.container}>
+        <TouchableOpacity
+          onPress={navigateToLoginWithClearStorage}
+          style={{
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            marginHorizontal: 25,
+            marginVertical: 10,
+          }}>
+          <AntDesign name="logout" size={25} color="black" />
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={navigateToSignup}>
-        <Text>SignUp</Text>
-      </TouchableOpacity>
+        <View style={{justifyContent: 'center', alignItems: 'center'}}>
+          <Image style={styles.profileImage} source={logo} />
+          <Text style={{fontSize: 20, fontWeight: '500', color: 'black'}}>
+            @username{' '}
+          </Text>
+        </View>
 
-      <TouchableOpacity
-        style={styles.button}
-        onPress={navigateToLoginWithClearStorage}>
-        <Text>Logout</Text>
-      </TouchableOpacity>
+        <View style={styles.personalInfo}>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Name:</Text>
+            <Text style={styles.infoText}>Brandan Moore</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Movile:</Text>
+            <Text style={styles.infoText}>+91 889835323</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Email:</Text>
+            <Text style={styles.infoText}>brendan@gmail.com</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>company Name:</Text>
+            <Text style={styles.infoText}>Moore IT Services</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Industry:</Text>
+            <Text style={styles.infoText}>IT Industry</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Location:</Text>
+            <Text style={styles.infoText}>Chennai, India</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Comapny Address:</Text>
+            <Text style={styles.infoText}>Perfect Square, Chennai India</Text>
+          </View>
+          <View style={styles.infoRow}>
+            <Text style={styles.infoTextHeading}>Member Since:</Text>
+            <Text style={styles.infoText}>12/11/2016</Text>
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 40,
-    marginBottom: 20,
+    flexGrow: 1,
   },
   button: {
     margin: 10,
@@ -85,6 +124,44 @@ const styles = StyleSheet.create({
     width: 100,
     backgroundColor: 'lightblue',
     alignItems: 'center',
+  },
+  profileImage: {
+    width: 120,
+    height: 120,
+    borderRadius: 200,
+  },
+  personalInfo: {
+    marginStart: 15,
+    marginTop: 20,
+    marginBottom: 30,
+    flex: 1,
+    justifyContent: 'space-evenly',
+  },
+  infoRow: {
+    // flex: 1,
+    // justifyContent: 'space-between',
+    // flexDirection: 'row',
+    borderBottomWidth: 1,
+    borderBottomColor: 'gray',
+    paddingVertical: 10,
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  infoTextHeading: {
+    fontSize: 14,
+    fontWeight: '500',
+    alignSelf: 'center',
+    color: 'black',
+  },
+  infoText: {
+    flex: 1,
+    flexWrap: 'wrap',
+    alignSelf: 'center',
+    fontWeight: '600',
+    fontSize: 14,
+    marginStart: 15,
+    color: 'black',
   },
 });
 

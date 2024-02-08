@@ -1,11 +1,16 @@
 import React, {useEffect} from 'react';
 import {Text, Image, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
+import global from '../components/global';
 
 const SplashScreen = ({navigation}) => {
   useEffect(() => {
     setTimeout(() => {
-      navigation.navigate('Login');
+      if (global.loggedin == true) {
+        navigation.navigate('BottomTabNavigator');
+      } else {
+        navigation.navigate('Login');
+      }
     }, 2000);
   }, []);
 

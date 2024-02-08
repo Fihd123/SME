@@ -2,7 +2,6 @@ import React from 'react';
 import {
   View,
   Text,
-  SafeAreaView,
   Image,
   TouchableOpacity,
   FlatList,
@@ -11,16 +10,17 @@ import {
 import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/styles';
 import {ENTRIES1, ENTRIES2, ENTRIES3} from '../assets/json/Entries';
-import SME from '../assets/SME_LOGO.png';
-import profileLogo from '../assets/profile.png';
 import CarouselComponent from '../components/Carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
+import Navbar from '../components/Navbar';
+import HTML from 'react-native-render-html';
+import bgimg from '../assets/login-bg.jpg';
 
 const Home = () => {
   const navigation = useNavigation();
 
   const navigateToDetail = item => {
-    navigation.navigate('Details', {item});
+    navigation.navigate('eventDetails', {item});
   };
 
   const navigateToProfile = () => {
@@ -33,70 +33,70 @@ const Home = () => {
       onPress={() => navigateToDetail(item)}>
       <View style={styles.card}>
         <Image style={styles.images} source={{uri: item.image}} />
-        <Text style={styles.title}>{item.title.slice(0, 10)}...</Text>
-        <Text style={styles.desc}>{item.description.slice(0, 20)}...</Text>
+        <Text style={styles.title}>{item.title.slice(0, 25)}...</Text>
       </View>
     </TouchableOpacity>
   );
 
   return (
-    <ScrollView style={styles.safeArea}>
-      <View style={styles.imagesContainer}>
-        <Image source={SME} style={styles.logo} />
-        <TouchableOpacity
-          style={styles.profileContainer}
-          onPress={navigateToProfile}>
-          <Image source={profileLogo} style={styles.profile} />
-        </TouchableOpacity>
+    <View style={styles.safeArea}>
+      <View>
+        <Navbar />
       </View>
-      <View style={{backgroundColor: 'transparent'}}>
-        <CarouselComponent />
-      </View>
-      {/* <ScrollView> */}
-      <View style={styles.header}>
-        <Text style={styles.text}>UPCOMING EVENTS</Text>
-        <TouchableOpacity
-          style={{backgroundColor: '#AFAFAF', borderRadius: 20, padding: 7}}
-          onPress={() => navigation.navigate('Events')}>
-          <AntDesign name="right" color="white" size={25} />
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        horizontal
-        data={ENTRIES1}
-        renderItem={renderGridItem}
-        keyExtractor={item => item.key}
-      />
-      <View style={styles.header}>
-        <Text style={styles.text}>UPCOMING CONFERENCE</Text>
-        <TouchableOpacity
-          style={{backgroundColor: '#AFAFAF', borderRadius: 20, padding: 7}}
-          onPress={() => navigation.navigate('Conference')}>
-          <AntDesign name="right" color="white" size={25} />
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        horizontal
-        data={ENTRIES2}
-        renderItem={renderGridItem}
-        keyExtractor={item => item.key}
-      />
-      <View style={styles.header}>
-        <Text style={styles.text}>UPCOMING NEWS</Text>
-        <TouchableOpacity
-          style={{backgroundColor: '#AFAFAF', borderRadius: 20, padding: 7}}
-          onPress={() => navigation.navigate('News')}>
-          <AntDesign name="right" color="white" size={25} />
-        </TouchableOpacity>
-      </View>
-      <FlatList
-        horizontal
-        data={ENTRIES3}
-        renderItem={renderGridItem}
-        keyExtractor={item => item.key}
-      />
-      {/* </ScrollView> */}
-    </ScrollView>
+      <ScrollView style={{marginTop: 10}}>
+        <View style={{backgroundColor: 'transparent'}}>
+          <CarouselComponent />
+        </View>
+        <View style={styles.header}>
+          <Text style={styles.text}>UPCOMING EVENTS</Text>
+          <TouchableOpacity
+            style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 8}}
+            onPress={() => navigation.navigate('Events')}>
+            <AntDesign name="right" color="grey" size={12} />
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingLeft: 15}}>
+          <FlatList
+            horizontal
+            data={ENTRIES1}
+            renderItem={renderGridItem}
+            keyExtractor={item => item.key}
+          />
+        </View>
+        <View style={styles.header}>
+          <Text style={styles.text}>UPCOMING CONFERENCE</Text>
+          <TouchableOpacity
+            style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 8}}
+            onPress={() => navigation.navigate('Conference')}>
+            <AntDesign name="right" color="grey" size={12} />
+          </TouchableOpacity>
+        </View>
+        <View style={{paddingLeft: 15}}>
+          <FlatList
+            horizontal
+            data={ENTRIES2}
+            renderItem={renderGridItem}
+            keyExtractor={item => item.key}
+          />
+        </View>
+        <View style={{marginTop: 30}}>
+          <View style={styles.about_txtcontainer}>
+            <Text style={styles.abouttext}>
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
+              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              <Text
+                style={{fontWeight: '800', color: '#E6D88D', lineHeight: 20}}>
+                {' '}
+                Read More ...
+              </Text>
+            </Text>
+          </View>
+          <View style={styles.about_imgcontainer}>
+            <Image source={bgimg} style={styles.aboutimg}></Image>
+          </View>
+        </View>
+      </ScrollView>
+    </View>
   );
 };
 

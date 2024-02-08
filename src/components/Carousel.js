@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   StyleSheet,
@@ -8,21 +8,61 @@ import {
   Image,
   FlatList,
 } from 'react-native';
-import Carousel, {Pagination} from 'react-native-snap-carousel';
-import {ENTRIES1, ENTRIES2} from '../assets/json/Entries';
-import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ProgressBar from 'react-native-progress';
+import {useNavigation} from '@react-navigation/native';
 
 const {width: screenWidth} = Dimensions.get('window');
 
 const CarouselComponent = () => {
-  const images = Array.isArray(ENTRIES1)
-    ? ENTRIES1.map(entry => entry.image)
-    : [];
-
+  const [news, setNews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const navigation = useNavigation();
+
+  useEffect(() => {
+    const fetchPastEvents = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        const response = await fetch(
+          'https://smeapp.havock.org/api/all-posts',
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userToken}`,
+            },
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          setNews(data);
+          setLoading(false);
+        } else {
+          setError('Error fetching data');
+          setLoading(false);
+        }
+      } catch (error) {
+        setError('Error fetching data: ' + error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchPastEvents();
+  }, []);
+
+  if (loading) {
+    return <Text>Loading...</Text>;
+  }
+
+  if (error) {
+    return <Text>Error: {error}</Text>;
+  }
+
   const navigateToDetail = item => {
-    navigation.navigate('Details', {item});
+    navigation.navigate('eventDetails', {itemId: item.id, item});
   };
 
   const renderGridItem = ({item}) => (
@@ -30,12 +70,18 @@ const CarouselComponent = () => {
       style={styles.parentCard}
       onPress={() => navigateToDetail(item)}>
       <View style={styles.card}>
-        <Image style={styles.images} source={{uri: item.image}} />
-        <Text style={styles.title}>{item.title.slice(0, 10)}...</Text>
+        <Image style={styles.images} source={{uri: item.post_image}} />
         <View style={styles.textOverlay}>
-          <Text style={styles.desc}>{item.description.slice(0, 30)}...</Text>
-          <View style={{paddingBottom: 15, paddingTop: 8}}>
-            <ProgressBar.Bar progress={0.3} width={140} height={2} />
+          <Text style={styles.title}>{item.title}</Text>
+          <View style={{paddingBottom: 12, paddingTop: 8}}>
+            <ProgressBar.Bar
+              progress={0.4}
+              width={screenWidth / 2.9}
+              height={4}
+              backgroundColor="#E6D88D"
+              color="#2EBFAE"
+              borderWidth={0}
+            />
           </View>
         </View>
       </View>
@@ -43,23 +89,12 @@ const CarouselComponent = () => {
   );
 
   return (
-    <View>
-      {/* <Carousel
-        data={images}
-        renderItem={renderGridItem}
-        sliderWidth={screenWidth}
-        itemWidth={screenWidth} // Width of the carousel
-        layout="default"
-        loop
-        autoplay
-        autoplayInterval={2000}
-      /> */}
-
+    <View style={{paddingLeft: 5}}>
       <FlatList
         horizontal
-        data={ENTRIES2}
+        data={news}
         renderItem={renderGridItem}
-        keyExtractor={item => item.key}
+        keyExtractor={item => item.id.toString()}
       />
     </View>
   );
@@ -76,30 +111,30 @@ const styles = StyleSheet.create({
   },
   card: {
     position: 'relative',
-    width: 170,
+    width: screenWidth / 2,
     height: 250,
     borderRadius: 10,
   },
   textOverlay: {
     position: 'absolute',
+    top: 0,
     bottom: 0,
     left: 0,
     right: 0,
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
-    paddingHorizontal: 15,
-    borderBottomLeftRadius: 10,
-    borderBottomRightRadius: 10,
+    justifyContent: 'flex-end',
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingBottom: 15,
+    paddingHorizontal: 25,
+    borderRadius: 10,
   },
   title: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    top: 160,
-    fontSize: 13,
-    paddingHorizontal: 15,
+    fontSize: 14,
     color: '#fff',
+    fontWeight: '700',
+    lineHeight: 17,
     textAlign: 'left',
+    marginBottom: 3,
+    paddingRight: 15,
   },
   desc: {
     fontSize: 16,
@@ -109,8 +144,8 @@ const styles = StyleSheet.create({
     textAlign: 'left',
   },
   images: {
-    width: 170,
-    height: 250,
+    width: '100%',
+    height: '100%',
     borderRadius: 10,
     opacity: 0.6,
   },

@@ -1,10 +1,12 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import {NavigationContainer, DefaultTheme} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import Home from './src/screens/Home';
 import SplashScreen from './src/screens/SplashScreen';
 import BottomTabNavigator from './src/components/BottomTabNavigator';
-import CardDetails from './src/components/CardDetails';
+import EventCardDetails from './src/components/EventCardDetails';
+import ConferenceCardDetails from './src/components/ConferenceCardDetails';
+import NewsDetails from './src/components/NewsDetail';
 import Navbar from './src/components/Navbar';
 import News from './src/screens/News';
 import Login from './src/screens/Login';
@@ -13,9 +15,15 @@ import Profile from './src/screens/Profile';
 
 const App = () => {
   const Stack = createNativeStackNavigator();
-
+  const MyTheme = {
+    ...DefaultTheme,
+    colors: {
+      ...DefaultTheme.colors,
+      background: '#EAE9E5',
+    },
+  };
   return (
-    <NavigationContainer>
+    <NavigationContainer theme={MyTheme}>
       <Stack.Navigator
         initialRouteName="SplashScreen"
         screenOptions={{
@@ -52,11 +60,20 @@ const App = () => {
           options={{headerShown: false}}
         />
         <Stack.Screen
-          name="Details"
-          component={CardDetails}
+          name="eventDetails"
+          component={EventCardDetails}
           options={{headerShown: false}}
         />
-
+        <Stack.Screen
+          name="ConfDetails"
+          component={ConferenceCardDetails}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="NewsDetails"
+          component={NewsDetails}
+          options={{headerShown: false}}
+        />
         <Stack.Screen
           name="News"
           component={News}

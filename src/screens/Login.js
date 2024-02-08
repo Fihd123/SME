@@ -5,14 +5,16 @@ import {
   TextInput,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import bgimg from '../assets/login-bg.jpg';
+import global from '../components/global';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [loggedIn, setIsLoggedIn] = useState(false);
   const [errorText, setErrorText] = useState('');
   const [msg, setMsg] = useState('');
 
@@ -26,7 +28,7 @@ const Login = ({navigation}) => {
     const storedEmail = await AsyncStorage.getItem('userEmail');
     if (storedEmail) {
       navigation.navigate('BottomTabNavigator');
-      setIsLoggedIn(true);
+      global.loggedIn = true;
     }
   };
 
@@ -46,14 +48,14 @@ const Login = ({navigation}) => {
 
         navigation.navigate('BottomTabNavigator');
         setMsg(response.data.message);
-        setIsLoggedIn(true);
+        global.loggedIn = true;
         setTimeout(() => {
           setMsg('');
         }, 1500);
 
         logAsyncStorageData();
       } else {
-        setIsLoggedIn(false);
+        global.loggedIn = false;
         setErrorText(response.data.message);
         setTimeout(() => {
           setErrorText('');
@@ -78,34 +80,36 @@ const Login = ({navigation}) => {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Login Page</Text>
+    <View style={{flex: 1}}>
+      <Image source={bgimg} style={{width: '100%', height: '50%'}} />
+      <View style={styles.container}>
+        <Text style={styles.title}>Welcome To SME Chamber</Text>
+        <TextInput
+          style={styles.input}
+          placeholder="Email"
+          onChangeText={text => setEmail(text)}
+          value={email}
+          keyboardType="email-address"
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Email"
-        onChangeText={text => setEmail(text)}
-        value={email}
-        keyboardType="email-address"
-      />
+        <TextInput
+          style={styles.input}
+          placeholder="Password"
+          secureTextEntry={true}
+          onChangeText={text => setPassword(text)}
+          value={password}
+        />
 
-      <TextInput
-        style={styles.input}
-        placeholder="Password"
-        secureTextEntry={true}
-        onChangeText={text => setPassword(text)}
-        value={password}
-      />
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Login</Text>
-      </TouchableOpacity>
-
-      {msg ? (
-        <Text style={styles.successText}>{msg}</Text>
-      ) : errorText ? (
-        <Text style={styles.errorText}>{errorText}</Text>
-      ) : null}
+        {msg ? (
+          <Text style={styles.successText}>{msg}</Text>
+        ) : errorText ? (
+          <Text style={styles.errorText}>{errorText}</Text>
+        ) : null}
+      </View>
     </View>
   );
 };
@@ -114,27 +118,30 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center',
-    padding: 16,
+    paddingHorizontal: 25,
   },
   title: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 16,
+    fontWeight: '600',
     marginBottom: 16,
+    width: '100%',
   },
   input: {
     height: 40,
     borderColor: 'gray',
-    borderWidth: 1,
+    borderTopWidth: 0,
+    borderBottomWidth: 0.5,
     borderRadius: 8,
     marginBottom: 16,
     padding: 8,
     width: '100%',
   },
   button: {
-    backgroundColor: 'blue',
-    borderRadius: 8,
-    padding: 10,
+    marginTop: 15,
+    backgroundColor: '#1F2544',
+    borderRadius: 20,
+    paddingTop: 13,
+    paddingBottom: 13,
     width: '100%',
     alignItems: 'center',
   },
@@ -145,10 +152,14 @@ const styles = StyleSheet.create({
   successText: {
     color: 'green',
     marginTop: 10,
+    textAlign: 'center',
+    width: '100%',
   },
   errorText: {
     color: 'red',
     marginTop: 10,
+    textAlign: 'center',
+    width: '100%',
   },
 });
 

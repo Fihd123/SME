@@ -5,10 +5,10 @@ import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Home from '../screens/Home';
 import ContactScreen from '../screens/Contact';
+import About from '../screens/About';
 import Events from '../screens/Events';
 import Conference from '../screens/Conference';
 import Profile from '../screens/Profile';
-import {View} from 'react-native';
 
 const Tab = createBottomTabNavigator();
 
@@ -16,8 +16,8 @@ const BottomTabNavigator = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarActiveTintColor: 'black',
-        tabBarInactiveTintColor: 'grey',
+        tabBarActiveTintColor: '#000',
+        tabBarInactiveTintColor: '#999',
         headerShown: false,
         tabBarStyle: {
           borderTopLeftRadius: 50,
@@ -42,12 +42,12 @@ const BottomTabNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Contact"
-        component={ContactScreen}
+        name="About"
+        component={About}
         options={{
-          tabBarLabel: 'Contact',
+          tabBarLabel: 'About',
           tabBarIcon: ({color, size}) => (
-            <Feather name="phone-call" size={size} color={color} />
+            <Feather name="info" size={size} color={color} />
           ),
         }}
       />

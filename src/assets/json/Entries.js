@@ -35,7 +35,7 @@ export const ENTRIES1 = [
 
 export const ENTRIES2 = [
   {
-    title: 'Favourites landscapes 1',
+    title: 'Lorem ipsum dolor sit amet et nuncat mergitur',
     description: 'Lorem ipsum dolor sit amet',
     image: 'https://i.imgur.com/SsJmZ9jl.jpg',
   },

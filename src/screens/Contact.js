@@ -1,5 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
+import Navbar from '../components/Navbar';
 
 const Contact = () => {
   const ENTRIES1 = [
@@ -25,6 +26,9 @@ const Contact = () => {
 
   return (
     <View style={styles.container}>
+      <View>
+        <Navbar />
+      </View>
       <View style={styles.row}>
         <View style={styles.column}>
           <Image style={styles.image} source={{uri: ENTRIES1[0].image}} />
@@ -56,7 +60,6 @@ const Contact = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    flexDirection: 'column', // Default flexDirection is 'column', so this line is optional
   },
   row: {
     flex: 1,
