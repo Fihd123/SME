@@ -13,7 +13,6 @@ import {ENTRIES1, ENTRIES2, ENTRIES3} from '../assets/json/Entries';
 import CarouselComponent from '../components/Carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import Navbar from '../components/Navbar';
-import HTML from 'react-native-render-html';
 import bgimg from '../assets/login-bg.jpg';
 
 const Home = () => {
@@ -60,7 +59,7 @@ const Home = () => {
             horizontal
             data={ENTRIES1}
             renderItem={renderGridItem}
-            keyExtractor={item => item.key}
+            keyExtractor={(item, index) => index.toString()} // Use index as a fallback key
           />
         </View>
         <View style={styles.header}>
@@ -76,7 +75,7 @@ const Home = () => {
             horizontal
             data={ENTRIES2}
             renderItem={renderGridItem}
-            keyExtractor={item => item.key}
+            keyExtractor={(item, index) => index.toString()} // Use index as a fallback key
           />
         </View>
         <View style={{marginTop: 30}}>

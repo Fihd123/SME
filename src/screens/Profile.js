@@ -33,14 +33,6 @@ const Profile = () => {
     fetchUserEmail();
   }, []);
 
-  const navigateToLogin = () => {
-    navigation.navigate('Login');
-  };
-
-  const navigateToSignup = () => {
-    navigation.navigate('Signup');
-  };
-
   const navigateToLoginWithClearStorage = async () => {
     try {
       await AsyncStorage.clear();
@@ -53,7 +45,7 @@ const Profile = () => {
 
   return (
     <View style={{flex: 1}}>
-      <View style={{height: 80, paddingBottom: 10}}>
+      <View>
         <Navbar />
       </View>
       <ScrollView contentContainerStyle={styles.container}>
@@ -117,6 +109,7 @@ const Profile = () => {
 const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
+    backgroundColor: '#EAE9E5',
   },
   button: {
     margin: 10,

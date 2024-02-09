@@ -118,6 +118,7 @@ const About = () => {
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 15,
+    backgroundColor: '#EAE9E5',
   },
   row: {
     margin: 8,

@@ -44,7 +44,7 @@ function ForthComingConferences({navigation}) {
   );
 
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
+    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
       <FlatList
         data={[...ENTRIES1]}
         numColumns={2}
@@ -98,7 +98,7 @@ function PastConferences({navigation}) {
   }, []);
 
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
+    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
       <FlatList
         data={pastConf}
         numColumns={2}
@@ -122,8 +122,9 @@ const Conference = () => {
             fontWeight: '500',
             textTransform: 'uppercase',
             color: '#000',
+            backgroundColor: '#EAE9E5',
           }}>
-          Our Conferences
+          Our Events
         </Text>
       </View>
       <View style={{flex: 1}}>
@@ -200,6 +201,7 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: '#EAE9E5',
   },
   parentCard: {
     flex: 1,

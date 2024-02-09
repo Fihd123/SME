@@ -51,7 +51,7 @@ function ForthComingEvents({navigation}) {
   );
 
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
+    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
       <FlatList
         data={[...ENTRIES1]}
         numColumns={2}
@@ -106,12 +106,11 @@ function PastEvents({navigation}) {
       }
     };
 
-    // Call the function to fetch past events
     fetchPastEvents();
   }, []);
 
   return (
-    <View style={{flex: 1, paddingTop: 10}}>
+    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
       <FlatList
         data={pastEvents}
         numColumns={2}
@@ -139,7 +138,7 @@ const Events = () => {
           Our Events
         </Text>
       </View>
-      <View style={{flex: 1}}>
+      <View style={{flex: 1, backgroundColor: '#EAE9E5'}}>
         <Tab.Navigator
           initialRouteName="ForthComingEvents"
           screenOptions={{
@@ -184,12 +183,12 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     flexDirection: 'column',
+    backgroundColor: '#EAE9E5',
   },
   parentCard: {
     flex: 1,
     flexDirection: 'row',
     flexWrap: 'wrap',
-    // width: '50%',
   },
   card: {
     flex: 1,

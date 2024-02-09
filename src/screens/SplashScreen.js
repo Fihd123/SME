@@ -1,31 +1,40 @@
 import React, {useEffect} from 'react';
 import {Text, Image, View} from 'react-native';
 import * as Animatable from 'react-native-animatable';
-import global from '../components/global';
+import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = () => {
+  const navigation = useNavigation();
+
   useEffect(() => {
-    setTimeout(() => {
-      if (global.loggedin == true) {
-        navigation.navigate('BottomTabNavigator');
-      } else {
-        navigation.navigate('Login');
+    const checkLoginAndNavigate = async () => {
+      try {
+        const loginStatus = await AsyncStorage.getItem('LoginStatus');
+        if (loginStatus === 'true' || loginStatus === true) {
+          setTimeout(() => {
+            navigation.navigate('MainHome');
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            navigation.navigate('Login');
+          }, 2000);
+        }
+      } catch (error) {
+        console.error('Error reading login status:', error);
       }
-    }, 2000);
+    };
+
+    checkLoginAndNavigate();
   }, []);
 
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-      }}>
+    <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Animatable.Text
-        style={{fontSize: 50, fontFamily: 'fantasy', fontWeight: 700}}
+        style={{fontSize: 50, fontFamily: 'fantasy', fontWeight: '700'}}
         duration={2000}
         animation="zoomIn">
-        Splash{' '}
+        Splash
       </Animatable.Text>
     </View>
   );

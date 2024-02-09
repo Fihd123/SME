@@ -10,7 +10,7 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import bgimg from '../assets/login-bg.jpg';
-import global from '../components/global';
+import '../components/global';
 
 const Login = ({navigation}) => {
   const [email, setEmail] = useState('');
@@ -20,15 +20,16 @@ const Login = ({navigation}) => {
 
   useEffect(() => {
     checkLoggedIn();
-
     logAsyncStorageData();
   }, []);
 
   const checkLoggedIn = async () => {
     const storedEmail = await AsyncStorage.getItem('userEmail');
     if (storedEmail) {
-      navigation.navigate('BottomTabNavigator');
+      navigation.navigate('MainHome');
       global.loggedIn = true;
+    } else {
+      navigation.navigate('Login');
     }
   };
 
@@ -45,20 +46,24 @@ const Login = ({navigation}) => {
       if (response.data.status) {
         await AsyncStorage.setItem('userEmail', email);
         await AsyncStorage.setItem('userToken', response.data.token);
+        await AsyncStorage.setItem('LoginStatus', JSON.stringify(true));
 
-        navigation.navigate('BottomTabNavigator');
+        navigation.navigate('MainHome');
         setMsg(response.data.message);
-        global.loggedIn = true;
-        setTimeout(() => {
-          setMsg('');
-        }, 1500);
 
+        // Update global.loggedIn to true after successful login
+        global.loggedIn = true;
+
+        setTimeout(() => {
+          setMsg('loggedIn');
+        }, 1500);
+        console.log(global.loggedIn);
         logAsyncStorageData();
       } else {
         global.loggedIn = false;
         setErrorText(response.data.message);
         setTimeout(() => {
-          setErrorText('');
+          setErrorText('Error while logging...');
         }, 1500);
       }
     } catch (error) {
@@ -71,9 +76,11 @@ const Login = ({navigation}) => {
     try {
       const userEmail = await AsyncStorage.getItem('userEmail');
       const userToken = await AsyncStorage.getItem('userToken');
+      const loginStatus = await AsyncStorage.getItem('LoginStatus');
 
       console.log('User Email:', userEmail);
       console.log('User Token:', userToken);
+      console.log('Login Status:', loginStatus);
     } catch (error) {
       console.error('Error retrieving AsyncStorage data:', error);
     }
