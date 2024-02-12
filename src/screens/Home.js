@@ -39,9 +39,6 @@ const Home = () => {
 
   return (
     <View style={styles.safeArea}>
-      <View>
-        <Navbar />
-      </View>
       <ScrollView style={{marginTop: 10}}>
         <View style={{backgroundColor: 'transparent'}}>
           <CarouselComponent />
@@ -59,7 +56,8 @@ const Home = () => {
             horizontal
             data={ENTRIES1}
             renderItem={renderGridItem}
-            keyExtractor={(item, index) => index.toString()} // Use index as a fallback key
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
           />
         </View>
         <View style={styles.header}>
@@ -75,7 +73,8 @@ const Home = () => {
             horizontal
             data={ENTRIES2}
             renderItem={renderGridItem}
-            keyExtractor={(item, index) => index.toString()} // Use index as a fallback key
+            keyExtractor={(item, index) => index.toString()}
+            showsHorizontalScrollIndicator={false}
           />
         </View>
         <View style={{marginTop: 30}}>

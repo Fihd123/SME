@@ -126,7 +126,6 @@ const Events = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Navbar />
       <View style={{paddingHorizontal: 15, marginTop: 20}}>
         <Text
           style={{

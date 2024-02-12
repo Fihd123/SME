@@ -45,9 +45,6 @@ const Profile = () => {
 
   return (
     <View style={{flex: 1}}>
-      <View>
-        <Navbar />
-      </View>
       <ScrollView contentContainerStyle={styles.container}>
         <TouchableOpacity
           onPress={navigateToLoginWithClearStorage}

@@ -55,7 +55,7 @@ const SignUpForm = () => {
           flexDirection: 'row',
           alignItems: 'center',
           paddingVertical: 15,
-          backgroundColor: '#1b0083',
+          backgroundColor: '#1F2544',
         }}>
         <AntDesign
           name="arrowleft"
@@ -165,7 +165,7 @@ const styles = StyleSheet.create({
   },
 
   button: {
-    backgroundColor: '#1b0083',
+    backgroundColor: '#1F2544',
     padding: 15,
     borderRadius: 30,
     alignItems: 'center',
@@ -178,8 +178,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   signInText: {
-    fontWeight: '800',
-    marginLeft: 10, // Adjust the value as needed
+    fontWeight: '600',
+    marginLeft: 10,
+    fontSize: 13,
+    color: 'black',
   },
   dropdown: {
     height: 50,

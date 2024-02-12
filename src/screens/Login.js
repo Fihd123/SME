@@ -22,6 +22,9 @@ const Login = ({navigation}) => {
     checkLoggedIn();
     logAsyncStorageData();
   }, []);
+  const navigateToSignUp = async () => {
+    navigation.navigate('Signup');
+  };
 
   const checkLoggedIn = async () => {
     const storedEmail = await AsyncStorage.getItem('userEmail');
@@ -109,6 +112,33 @@ const Login = ({navigation}) => {
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginTop: 8,
+          }}
+          onPress={handleLogin}>
+          <Text
+            style={{
+              textAlign: 'center',
+              fontSize: 12,
+            }}>
+            DONT HAVE AN ACCOUNT?{' '}
+          </Text>
+          <Text
+            style={{
+              color: 'black',
+              fontWeight: '600',
+              fontSize: 13,
+              marginLeft: 2,
+            }}
+            onPress={() => navigateToSignUp()}>
+            SIGN UP
+          </Text>
         </TouchableOpacity>
 
         {msg ? (

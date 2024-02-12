@@ -36,7 +36,7 @@ const ConfCard = ({item, onPress, index}) => {
 
 function ForthComingConferences({navigation}) {
   const navigateToDetail = item => {
-    navigation.navigate('ConfDetails', {item});
+    navigation.navigate('ConferenceDetails', {item});
   };
 
   const renderGridItem = ({item}) => (
@@ -59,7 +59,7 @@ function PastConferences({navigation}) {
   const [pastConf, setPastconf] = useState([]);
 
   const navigateToDetail = item => {
-    navigation.navigate('ConfDetails', {itemId: item.id, item});
+    navigation.navigate('ConferenceDetails', {itemId: item.id, item});
   };
 
   const renderGridItem = ({item}) => (
@@ -114,7 +114,6 @@ const Conference = () => {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <Navbar />
       <View style={{paddingHorizontal: 15, marginTop: 20}}>
         <Text
           style={{

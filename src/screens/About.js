@@ -27,9 +27,6 @@ const About = () => {
 
   return (
     <ScrollView>
-      <View>
-        <Navbar />
-      </View>
       <View style={styles.container}>
         <View style={styles.row}>
           <Text

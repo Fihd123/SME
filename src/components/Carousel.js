@@ -1,4 +1,5 @@
 import React, {useState, useEffect} from 'react';
+import {RotatingLines} from 'react-loader-spinner';
 import {
   View,
   StyleSheet,
@@ -7,6 +8,7 @@ import {
   Text,
   Image,
   FlatList,
+  ActivityIndicator,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as ProgressBar from 'react-native-progress';
@@ -20,8 +22,12 @@ const CarouselComponent = () => {
   const [error, setError] = useState(null);
   const navigation = useNavigation();
 
+  const navigateToDetail = item => {
+    navigation.navigate('NewsDetails', {itemId: item.id, item});
+  };
+
   useEffect(() => {
-    const fetchPastEvents = async () => {
+    const fetchAllNews = async () => {
       try {
         const userToken = await AsyncStorage.getItem('userToken');
         const response = await fetch(
@@ -50,20 +56,8 @@ const CarouselComponent = () => {
       }
     };
 
-    fetchPastEvents();
+    fetchAllNews();
   }, []);
-
-  if (loading) {
-    return <Text>Loading...</Text>;
-  }
-
-  if (error) {
-    return <Text>Error: {error}</Text>;
-  }
-
-  const navigateToDetail = item => {
-    navigation.navigate('eventDetails', {itemId: item.id, item});
-  };
 
   const renderGridItem = ({item}) => (
     <TouchableOpacity
@@ -88,6 +82,18 @@ const CarouselComponent = () => {
     </TouchableOpacity>
   );
 
+  if (loading) {
+    return (
+      <View style={styles.loaderContainer}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (error) {
+    return <Text>Error: {error}</Text>;
+  }
+
   return (
     <View style={{paddingLeft: 5}}>
       <FlatList
@@ -95,6 +101,7 @@ const CarouselComponent = () => {
         data={news}
         renderItem={renderGridItem}
         keyExtractor={item => item.id.toString()}
+        showsHorizontalScrollIndicator={false}
       />
     </View>
   );
@@ -148,6 +155,12 @@ const styles = StyleSheet.create({
     height: '100%',
     borderRadius: 10,
     opacity: 0.6,
+  },
+  loaderContainer: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: screenWidth,
+    height: 250,
   },
 });
 

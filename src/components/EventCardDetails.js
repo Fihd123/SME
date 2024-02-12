@@ -11,14 +11,20 @@ import HTML from 'react-native-render-html';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import img from '../assets/login-bg.jpg';
 import * as ProgressBar from 'react-native-progress';
+import {useNavigation} from '@react-navigation/native';
 
 function Index(props) {
   const {width: screenWidth} = Dimensions.get('window');
   const long_desc =
     "<p style='text-align:justify'><strong><span>SME Business Forum, a premium business networking platform would like to provide opportunities to connect and communicate with the entrepreneurs, senior executives, buyers, suppliers, manufacturers, exporters, service providers and representatives from the various business fields to explore various emerging business opportunities related to supply, procurement, sourcing,  marketing, branding, promotion and establish strategic business partnership with the potential enterprises to receive &amp; exchange business leads &amp; referrals as well as connect with the investors, bankers and financial consultants to fulfil your financial &amp; investment requirements.</span></strong></p>";
+
+  const navigate = useNavigation();
+  const navigateToBack = () => {
+    navigate.goBack();
+  };
   return (
     <ScrollView style={styles.container}>
-      <Text style={styles.cut}>
+      <Text onPress={() => navigateToBack()} style={styles.cut}>
         <AntDesign name="arrowleft" size={30} color="black" />
       </Text>
       <View>
@@ -86,6 +92,7 @@ function Index(props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#EAE9E5',
   },
   imageContainer: {
     justifyContent: 'center',
