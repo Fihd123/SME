@@ -1,5 +1,12 @@
 {
   "name": "Awesome01",
   "displayName": "SME",
-  "orientation": "portrait"
+  "orientation": "portrait",
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "73d669dd-11ee-4681-b094-e6b11868b94e"
+      }
+    }
+  }
 }

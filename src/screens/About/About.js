@@ -1,29 +1,29 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image, ScrollView} from 'react-native';
-import Navbar from '../components/Navbar';
-import aboutBg from '../assets/aboutbg.png';
+import Navbar from '../../components/Navbar';
+import aboutBg from '../../assets/aboutbg.png';
 
 const About = () => {
-  const ENTRIES1 = [
-    {
-      image: 'https://i.imgur.com/UYiroysl.jpg',
-    },
-    {
-      image: 'https://i.imgur.com/UPrs1EWl.jpg',
-    },
-    {
-      image: 'https://i.imgur.com/MABUbpDl.jpg',
-    },
-    {
-      image: 'https://i.imgur.com/KZsmUi2l.jpg',
-    },
-    {
-      image: 'https://i.imgur.com/2nCt3Sbl.jpg',
-    },
-    {
-      image: 'https://i.imgur.com/lceHsT6l.jpg',
-    },
-  ];
+  // const ENTRIES1 = [
+  //   {
+  //     image: 'https://i.imgur.com/UYiroysl.jpg',
+  //   },
+  //   {
+  //     image: 'https://i.imgur.com/UPrs1EWl.jpg',
+  //   },
+  //   {
+  //     image: 'https://i.imgur.com/MABUbpDl.jpg',
+  //   },
+  //   {
+  //     image: 'https://i.imgur.com/KZsmUi2l.jpg',
+  //   },
+  //   {
+  //     image: 'https://i.imgur.com/2nCt3Sbl.jpg',
+  //   },
+  //   {
+  //     image: 'https://i.imgur.com/lceHsT6l.jpg',
+  //   },
+  // ];
 
   return (
     <ScrollView>

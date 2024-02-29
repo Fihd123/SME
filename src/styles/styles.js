@@ -98,17 +98,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     minHeight: 200,
     borderTopLeftRadius: 30,
+    paddingLeft: 10,
   },
   abouttext: {
     fontSize: 13,
     lineHeight: 18,
-    color: '#000',
+    color: '#fff',
     paddingHorizontal: 20,
     paddingVertical: 30,
   },
   about_imgcontainer: {
     paddingHorizontal: 20,
-    marginTop: -70,
+    marginTop: -67,
     marginBottom: 20,
   },
   aboutimg: {

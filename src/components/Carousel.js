@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-import {RotatingLines} from 'react-loader-spinner';
 import {
   View,
   StyleSheet,
@@ -52,6 +51,7 @@ const CarouselComponent = () => {
         }
       } catch (error) {
         setError('Error fetching data: ' + error.message);
+        console.log(error);
         setLoading(false);
       }
     };

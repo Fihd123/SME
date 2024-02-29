@@ -17,22 +17,25 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [errorText, setErrorText] = useState('');
   const [msg, setMsg] = useState('');
+  console.log('Navigation prop:    ', navigation);
 
-  useEffect(() => {
-    checkLoggedIn();
-    logAsyncStorageData();
-  }, []);
   const navigateToSignUp = async () => {
     navigation.navigate('Signup');
   };
 
   const checkLoggedIn = async () => {
-    const storedEmail = await AsyncStorage.getItem('userEmail');
-    if (storedEmail) {
-      navigation.navigate('MainHome');
-      global.loggedIn = true;
-    } else {
-      navigation.navigate('Login');
+    try {
+      if (navigation) {
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+        if (storedEmail) {
+          navigation?.navigate('MainHome');
+          global.loggedIn = true;
+        } else {
+          navigation?.navigate('Login');
+        }
+      }
+    } catch (error) {
+      console.error('Error checking login status:', error);
     }
   };
 
@@ -51,17 +54,13 @@ const Login = ({navigation}) => {
         await AsyncStorage.setItem('userToken', response.data.token);
         await AsyncStorage.setItem('LoginStatus', JSON.stringify(true));
 
-        navigation.navigate('MainHome');
-        setMsg(response.data.message);
-
-        // Update global.loggedIn to true after successful login
         global.loggedIn = true;
 
-        setTimeout(() => {
-          setMsg('loggedIn');
-        }, 1500);
+        setMsg(response.data.message);
+
         console.log(global.loggedIn);
         logAsyncStorageData();
+        navigation.navigate('MainHome');
       } else {
         global.loggedIn = false;
         setErrorText(response.data.message);
@@ -71,6 +70,7 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.error('Login error:', error);
+      console.error('Error response:', error.response);
       setErrorText('Login failed. Please try again.');
     }
   };
@@ -88,6 +88,11 @@ const Login = ({navigation}) => {
       console.error('Error retrieving AsyncStorage data:', error);
     }
   };
+
+  useEffect(() => {
+    checkLoggedIn();
+    logAsyncStorageData();
+  }, [navigation]);
 
   return (
     <View style={{flex: 1}}>

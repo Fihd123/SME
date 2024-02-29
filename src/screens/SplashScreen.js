@@ -1,12 +1,10 @@
 import React, {useEffect} from 'react';
-import {Text, Image, View} from 'react-native';
-import * as Animatable from 'react-native-animatable';
-import {useNavigation} from '@react-navigation/native';
+import {Text, Image, View, Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppLogo from '../assets/APP-Screen.jpg';
+import {useNavigation} from '@react-navigation/native';
 
-const SplashScreen = () => {
-  const navigation = useNavigation();
-
+const SplashScreen = ({navigation}) => {
   useEffect(() => {
     const checkLoginAndNavigate = async () => {
       try {
@@ -26,16 +24,19 @@ const SplashScreen = () => {
     };
 
     checkLoginAndNavigate();
-  }, []);
+  }, [navigation]);
 
+  // setTimeout(() => {
+  //   navigation.navigate('MainHome');
+  // }, 2000);
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-      <Animatable.Text
-        style={{fontSize: 50, fontFamily: 'fantasy', fontWeight: '700'}}
-        duration={2000}
-        animation="zoomIn">
-        Splash
-      </Animatable.Text>
+      <Image
+        style={{
+          resizeMode: 'contain',
+        }}
+        source={AppLogo}
+      />
     </View>
   );
 };

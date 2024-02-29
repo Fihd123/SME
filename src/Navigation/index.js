@@ -1,20 +1,21 @@
 import React, {useEffect, useState} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
-import BottomTabNavigator from '../../components/BottomTabNavigator';
-import SplashScreen from '../SplashScreen';
-import Login from '../Login';
+import BottomTabNavigator from './BottomTabNavigator';
+import SplashScreen from '../screens/SplashScreen';
+import Login from '../screens/Login';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Navbar from '../../components/Navbar';
-import EventDetails from '../../components/EventCardDetails';
-import ConferenceDetails from '../../components/ConferenceCardDetails';
-import NewsDetails from '../../components/NewsDetail';
-import News from '../News';
-import SignUp from '../SignUp';
+import Navbar from '../components/Navbar';
+import EventDetails from '../components/EventCardDetails';
+import ConferenceDetails from '../components/ConferenceCardDetails';
+import NewsDetails from '../components/NewsDetail';
+import News from '../screens/News';
+import SignUp from '../screens/SignUp';
+import {NavigationProvider} from '../Context/NavigationContext';
 
 const Stack = createNativeStackNavigator();
 
-const NavigationContainerWrapper = () => {
+const StackRoutes = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
@@ -32,26 +33,20 @@ const NavigationContainerWrapper = () => {
   };
 
   return (
-    <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={isLoggedIn ? 'MainHome' : 'SplashScreen'}
-        screenOptions={{
-          headerShown: false,
-        }}>
-        <Stack.Screen name="SplashScreen" component={SplashScreen} />
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Signup" component={SignUp} />
-        <Stack.Screen name="MainHome" component={MainStack} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Stack.Navigator>
+      <Stack.Screen name="SplashScreen" component={SplashScreen} />
+      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Signup" component={SignUp} />
+      <Stack.Screen name="MainHomeTabs" component={BottomTabNavigator} />
+      <Stack.Screen name="eventDetails" component={EventDetails} />
+      <Stack.Screen name="ConferenceDetails" component={ConferenceDetails} />
+      <Stack.Screen name="NewsDetails" component={NewsDetails} />
+    </Stack.Navigator>
   );
 
   function MainStack() {
     return (
-      <Stack.Navigator
-        screenOptions={{
-          header: () => <Navbar />,
-        }}>
+      <Stack.Navigator>
         <Stack.Screen name="MainHomeTabs" component={BottomTabNavigator} />
         <Stack.Screen name="eventDetails" component={EventDetails} />
         <Stack.Screen name="ConferenceDetails" component={ConferenceDetails} />
@@ -61,4 +56,4 @@ const NavigationContainerWrapper = () => {
   }
 };
 
-export default NavigationContainerWrapper;
+export default StackRoutes;

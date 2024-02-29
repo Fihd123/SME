@@ -1,5 +1,4 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {useNavigation} from '@react-navigation/native';
 import React, {useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import {
@@ -10,11 +9,10 @@ import {
   Image,
   ScrollView,
 } from 'react-native';
-import Navbar from '../components/Navbar';
-import logo from '../assets/SME_LOGO.png';
+import Navbar from '../../components/Navbar';
+import logo from '../../assets/SME_LOGO.png';
 
-const Profile = () => {
-  const navigation = useNavigation();
+const Profile = ({navigation}) => {
   const [userEmail, setUserEmail] = useState(null);
   const [userToken, setUserToken] = useState(null);
 

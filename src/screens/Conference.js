@@ -123,7 +123,7 @@ const Conference = () => {
             color: '#000',
             backgroundColor: '#EAE9E5',
           }}>
-          Our Events
+          Our Conference
         </Text>
       </View>
       <View style={{flex: 1}}>

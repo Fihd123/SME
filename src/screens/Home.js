@@ -7,19 +7,18 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
-import {useNavigation} from '@react-navigation/native';
 import styles from '../styles/styles';
 import {ENTRIES1, ENTRIES2, ENTRIES3} from '../assets/json/Entries';
 import CarouselComponent from '../components/Carousel';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import Navbar from '../components/Navbar';
 import bgimg from '../assets/login-bg.jpg';
+import {useNavigation} from '@react-navigation/native';
 
 const Home = () => {
   const navigation = useNavigation();
 
   const navigateToDetail = item => {
-    navigation.navigate('eventDetails', {item});
+    navigation.navigate('eventDetails');
   };
 
   const navigateToProfile = () => {
@@ -80,15 +79,23 @@ const Home = () => {
         <View style={{marginTop: 30}}>
           <View style={styles.about_txtcontainer}>
             <Text style={styles.abouttext}>
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
+              SME Chamber of India, a premier national Chamber has been working
+              for the development of SMEs from manufacturing, service sectors
+              and allied industrial / business sectors for the last 30 years.
+              <Text style={{color: '#087E88'}}> .</Text>
               <Text
-                style={{fontWeight: '800', color: '#E6D88D', lineHeight: 20}}>
-                {' '}
+                onPress={() => navigation.navigate('About')}
+                style={{
+                  fontWeight: '800',
+                  color: '#E6D88D',
+                  lineHeight: 19,
+                  marginLeft: 10,
+                }}>
                 Read More ...
               </Text>
             </Text>
           </View>
+
           <View style={styles.about_imgcontainer}>
             <Image source={bgimg} style={styles.aboutimg}></Image>
           </View>
