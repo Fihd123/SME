@@ -16,8 +16,6 @@ const MemberDetailsPage = ({route}) => {
           `https://smeapp.havock.org/api/page/${itemId}?api_token=${userToken}`,
         );
 
-        console.log('API response:', response.data);
-
         if (response.data) {
           setData(response.data);
         } else {

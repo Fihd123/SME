@@ -34,14 +34,33 @@ const Drawer = createDrawerNavigator();
 
 const AboutItems = [
   {id: 1, label: 'Introduction', navigation: '1'},
-  {id: 3, label: 'Objectives'},
+  {id: 3, label: 'Founder & President '},
   {id: 4, label: 'Activities'},
-  {id: 5, label: 'Action Plan'},
-  {id: 6, label: 'SMEs in India'},
-  {id: 7, label: 'Scope in India SMEs'},
-  {id: 8, label: 'challenges in India SMEs'},
+  {id: 6, label: 'Support Services'},
+  {id: 7, label: 'Membership'},
 ];
 
+const EventItems = [
+  {
+    id: 1,
+    label: 'Forthcoming',
+  },
+  {
+    id: 10,
+    label: 'Past Events ',
+  },
+];
+
+const Gallery = [
+  {
+    id: 1,
+    label: 'Photos',
+  },
+  {
+    id: 2,
+    label: 'Videos',
+  },
+];
 const TeamItems = [
   {
     id: 9,
@@ -105,72 +124,77 @@ const CustomDrawerContent = props => {
 
   return (
     <DrawerContentScrollView {...props}>
+      <View>
+        <Text>Hii profile</Text>
+      </View>
       {Object.entries(props.descriptors).map(([key, descriptor], index) => {
         const focused = index === props.state.index;
         return (
-          <View key={key} style={{flex: 1}}>
-            {descriptor.options.display && (
-              <DrawerItem
-                key={key}
-                label={() => (
-                  <Text
-                    style={
-                      focused ? styles.drawerLabelFocused : styles.drawerLabel
-                    }>
-                    {descriptor.options.title}
-                  </Text>
-                )}
-                onPress={() => {
-                  console.log('Navigating to:', descriptor.route.name);
-                  descriptor.navigation.navigate(descriptor.route.name);
-                }}
-                style={[
-                  styles.drawerItem,
-                  focused ? styles.drawerItemFocused : null,
-                ]}
-              />
-            )}
-            {descriptor.route.name === 'About' && (
-              <CustomDropdown
-                label="About "
-                items={AboutItems}
-                active={active}
-                setActive={setActive}
-              />
-            )}
-            {descriptor.route.name === 'Team' && (
-              <TeamDropdown
-                label="Team"
-                active={active}
-                setActive={setActive}
-                items={TeamItems}
-              />
-            )}
-            {descriptor.route.name === 'Support' && (
-              <SupportDropdown
-                label="Support"
-                active={active}
-                setActive={setActive}
-                items={SupportItems}
-              />
-            )}
-            {descriptor.route.name === 'Member' && (
-              <MemberDropdown
-                label="Member"
-                active={active}
-                setActive={setActive}
-                items={MemberItems1}
-                items1={MemberItems2}
-              />
-            )}
-            {descriptor.route.name === 'Profile' && (
-              <DrawerProfile
-                label="Profile"
-                active={active}
-                setActive={setActive}
-              />
-            )}
-          </View>
+          <>
+            <View key={key} style={{flex: 1}}>
+              {descriptor.options.display && (
+                <DrawerItem
+                  key={key}
+                  label={() => (
+                    <Text
+                      style={
+                        focused ? styles.drawerLabelFocused : styles.drawerLabel
+                      }>
+                      {descriptor.options.title}
+                    </Text>
+                  )}
+                  onPress={() => {
+                    console.log('Navigating to:', descriptor.route.name);
+                    descriptor.navigation.navigate(descriptor.route.name);
+                  }}
+                  style={[
+                    styles.drawerItem,
+                    focused ? styles.drawerItemFocused : null,
+                  ]}
+                />
+              )}
+              {descriptor.route.name === 'About' && (
+                <CustomDropdown
+                  label="About "
+                  items={AboutItems}
+                  active={active}
+                  setActive={setActive}
+                />
+              )}
+              {descriptor.route.name === 'Team' && (
+                <TeamDropdown
+                  label="Team"
+                  active={active}
+                  setActive={setActive}
+                  items={TeamItems}
+                />
+              )}
+              {/* {descriptor.route.name === 'Support' && (
+                <SupportDropdown
+                  label="Support"
+                  active={active}
+                  setActive={setActive}
+                  items={SupportItems}
+                />
+              )} */}
+              {descriptor.route.name === 'Member' && (
+                <MemberDropdown
+                  label="Member"
+                  active={active}
+                  setActive={setActive}
+                  items={MemberItems1}
+                  items1={MemberItems2}
+                />
+              )}
+              {descriptor.route.name === 'Profile' && (
+                <DrawerProfile
+                  label="Profile"
+                  active={active}
+                  setActive={setActive}
+                />
+              )}
+            </View>
+          </>
         );
       })}
     </DrawerContentScrollView>
@@ -234,7 +258,7 @@ const DrawerNavigator = () => {
         drawerContent={props => (
           <CustomDrawerContent {...props} navigation={navigation} />
         )}>
-        <Drawer.Screen
+        {/* <Drawer.Screen
           name="Profile"
           component={Profile}
           options={{
@@ -245,7 +269,7 @@ const DrawerNavigator = () => {
             },
             display: false,
           }}
-        />
+        /> */}
         <Drawer.Screen
           name="MainHome"
           component={BottomTabNavigator}
