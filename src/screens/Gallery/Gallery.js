@@ -9,8 +9,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Navbar from '../components/Navbar';
-import {ENTRIES1, ENTRIES2} from '../assets/json/Entries';
+import Navbar from '../../components/Navbar';
+import {ENTRIES1, ENTRIES2} from '../../assets/json/Entries';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ConfCard = ({item, onPress, index}) => {
@@ -109,7 +109,7 @@ function PastConferences({navigation}) {
   );
 }
 
-const Conference = () => {
+const Gallery = () => {
   const Tab = createMaterialTopTabNavigator();
 
   return (
@@ -123,7 +123,7 @@ const Conference = () => {
             color: '#000',
             backgroundColor: '#EAE9E5',
           }}>
-          Our Conference
+          Our Gallery
         </Text>
       </View>
       <View style={{flex: 1}}>
@@ -150,14 +150,14 @@ const Conference = () => {
             },
           }}>
           <Tab.Screen
-            name="ForthComingEvents"
+            name="Photos"
             component={ForthComingConferences}
-            options={{tabBarLabel: 'Upcoming'}}
+            options={{tabBarLabel: 'Photos'}}
           />
           <Tab.Screen
-            name="PastEvents"
+            name="Videos"
             component={PastConferences}
-            options={{tabBarLabel: 'Past'}}
+            options={{tabBarLabel: 'Videos'}}
           />
         </Tab.Navigator>
       </View>
@@ -165,36 +165,7 @@ const Conference = () => {
   );
 };
 
-export default Conference;
-
-// const styles = StyleSheet.create({
-//   safeArea: {
-//     flex: 1,
-//     flexDirection: 'column',
-//   },
-//   parentCard: {
-//     flex: 1,
-//     flexDirection: 'row',
-//     flexWrap: 'wrap',
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     margin: 15,
-//   },
-//   card: {
-//     flex: 1,
-//     flexDirection: 'column',
-//   },
-//   images: {
-//     width: 150,
-//     height: 140,
-//     borderRadius: 10,
-//   },
-//   title: {
-//     fontSize: 15,
-//     padding: 3,
-//     fontWeight: '700',
-//   },
-// });
+export default Gallery;
 
 const styles = StyleSheet.create({
   safeArea: {

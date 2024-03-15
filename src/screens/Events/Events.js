@@ -9,8 +9,8 @@ import {
   StyleSheet,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Navbar from '../components/Navbar';
-import {ENTRIES1, ENTRIES2} from '../assets/json/Entries';
+import Navbar from '../../components/Navbar';
+import {ENTRIES1, ENTRIES2} from '../../assets/json/Entries';
 import HTML from 'react-native-render-html';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Dimensions} from 'react-native';

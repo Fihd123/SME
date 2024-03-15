@@ -9,9 +9,10 @@ import Navbar from '../components/Navbar';
 import EventDetails from '../components/EventCardDetails';
 import ConferenceDetails from '../components/ConferenceCardDetails';
 import NewsDetails from '../components/NewsDetail';
-import News from '../screens/News';
+import News from '../screens/News/News';
 import SignUp from '../screens/SignUp';
 import {NavigationProvider} from '../Context/NavigationContext';
+import Gallery from '../screens/Gallery/Gallery';
 
 const Stack = createNativeStackNavigator();
 
@@ -38,6 +39,7 @@ const StackRoutes = () => {
       <Stack.Screen name="Login" component={Login} />
       <Stack.Screen name="Signup" component={SignUp} />
       <Stack.Screen name="MainHomeTabs" component={BottomTabNavigator} />
+      <Stack.Screen name="Gallery" component={Gallery} />
       <Stack.Screen name="eventDetails" component={EventDetails} />
       <Stack.Screen name="ConferenceDetails" component={ConferenceDetails} />
       <Stack.Screen name="NewsDetails" component={NewsDetails} />

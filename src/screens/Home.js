@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import styles from '../styles/styles';
 import {ENTRIES1, ENTRIES2, ENTRIES3} from '../assets/json/Entries';
-import CarouselComponent from '../components/Carousel';
+import CarouselComponent from './News/News';
 import AntDesign from 'react-native-vector-icons/AntDesign';
 import bgimg from '../assets/login-bg.jpg';
 import {useNavigation} from '@react-navigation/native';
@@ -17,18 +17,32 @@ import {useNavigation} from '@react-navigation/native';
 const Home = () => {
   const navigation = useNavigation();
 
-  const navigateToDetail = item => {
+  const navigateToEventDetail = item => {
     navigation.navigate('eventDetails');
+  };
+  const navigateToGalleryDetail = item => {
+    navigation.navigate('galleryDetails');
   };
 
   const navigateToProfile = () => {
     navigation.navigate('Profile');
   };
 
-  const renderGridItem = ({item}) => (
+  const renderGridItem1 = ({item}) => (
     <TouchableOpacity
       style={styles.parentCard}
-      onPress={() => navigateToDetail(item)}>
+      onPress={() => navigateToEventDetail(item)}>
+      <View style={styles.card}>
+        <Image style={styles.images} source={{uri: item.image}} />
+        <Text style={styles.title}>{item.title.slice(0, 25)}...</Text>
+      </View>
+    </TouchableOpacity>
+  );
+
+  const renderGridItem2 = ({item}) => (
+    <TouchableOpacity
+      style={styles.parentCard}
+      onPress={() => navigateToGalleryDetail(item)}>
       <View style={styles.card}>
         <Image style={styles.images} source={{uri: item.image}} />
         <Text style={styles.title}>{item.title.slice(0, 25)}...</Text>
@@ -54,16 +68,16 @@ const Home = () => {
           <FlatList
             horizontal
             data={ENTRIES1}
-            renderItem={renderGridItem}
+            renderItem={renderGridItem1}
             keyExtractor={(item, index) => index.toString()}
             showsHorizontalScrollIndicator={false}
           />
         </View>
         <View style={styles.header}>
-          <Text style={styles.text}>UPCOMING CONFERENCE</Text>
+          <Text style={styles.text}>RECENT VIDEOS</Text>
           <TouchableOpacity
             style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 8}}
-            onPress={() => navigation.navigate('Conference')}>
+            onPress={() => navigation.navigate('Gallery')}>
             <AntDesign name="right" color="grey" size={12} />
           </TouchableOpacity>
         </View>
@@ -71,7 +85,7 @@ const Home = () => {
           <FlatList
             horizontal
             data={ENTRIES2}
-            renderItem={renderGridItem}
+            renderItem={renderGridItem2}
             keyExtractor={(item, index) => index.toString()}
             showsHorizontalScrollIndicator={false}
           />

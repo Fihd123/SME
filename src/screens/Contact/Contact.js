@@ -1,6 +1,6 @@
 import React from 'react';
 import {View, StyleSheet, Text, Image} from 'react-native';
-import Navbar from '../components/Navbar';
+import Navbar from '../../components/Navbar';
 
 const Contact = () => {
   const ENTRIES1 = [
@@ -26,9 +26,6 @@ const Contact = () => {
 
   return (
     <View style={styles.container}>
-      <View>
-        <Navbar />
-      </View>
       <View style={styles.row}>
         <View style={styles.column}>
           <Image style={styles.image} source={{uri: ENTRIES1[0].image}} />

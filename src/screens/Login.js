@@ -17,7 +17,7 @@ const Login = ({navigation}) => {
   const [password, setPassword] = useState('');
   const [errorText, setErrorText] = useState('');
   const [msg, setMsg] = useState('');
-  console.log('Navigation prop:    ', navigation);
+  // console.log('Navigation prop:    ', navigation);
 
   const navigateToSignUp = async () => {
     navigation.navigate('Signup');
@@ -25,14 +25,12 @@ const Login = ({navigation}) => {
 
   const checkLoggedIn = async () => {
     try {
-      if (navigation) {
-        const storedEmail = await AsyncStorage.getItem('userEmail');
-        if (storedEmail) {
-          navigation?.navigate('MainHome');
-          global.loggedIn = true;
-        } else {
-          navigation?.navigate('Login');
-        }
+      const storedEmail = await AsyncStorage.getItem('userEmail');
+      if (storedEmail) {
+        navigation?.navigate('MainHome');
+        global.loggedIn = true;
+      } else {
+        navigation?.navigate('Login');
       }
     } catch (error) {
       console.error('Error checking login status:', error);
@@ -44,8 +42,8 @@ const Login = ({navigation}) => {
       const response = await axios.post(
         'https://smeapp.havock.org/api/loginauth',
         {
-          email,
-          password,
+          email: email,
+          password: password,
         },
       );
 
@@ -70,8 +68,16 @@ const Login = ({navigation}) => {
       }
     } catch (error) {
       console.error('Login error:', error);
-      console.error('Error response:', error.response);
-      setErrorText('Login failed. Please try again.');
+      if (error.response) {
+        console.error('Error response:', error.response);
+        setErrorText('Login failed. Please try again.');
+      } else if (error.request) {
+        console.error('No response received:', error.request);
+        setErrorText('No response received from server. Please try again.');
+      } else {
+        console.error('Error during request setup:', error.message);
+        setErrorText('Error during request setup. Please try again.');
+      }
     }
   };
 

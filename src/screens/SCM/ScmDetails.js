@@ -4,9 +4,10 @@ import {useEffect, useState} from 'react';
 import {Dimensions, ScrollView, Text, View} from 'react-native';
 import HTML from 'react-native-render-html';
 
-const AboutDetailsPage = ({route}) => {
+const ScmDetails = ({route}) => {
   const [data, setData] = useState();
   const {itemId} = route.params;
+  console.log('Inter', itemId);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -68,4 +69,4 @@ const AboutDetailsPage = ({route}) => {
   );
 };
 
-export default AboutDetailsPage;
+export default ScmDetails;

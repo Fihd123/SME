@@ -7,7 +7,6 @@ import {
 } from '@react-navigation/drawer';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import BottomTabNavigator from './BottomTabNavigator';
-import Profile from '../screens/Profile/Profile';
 import EventDetails from '../components/EventCardDetails';
 import ConferenceDetails from '../components/ConferenceCardDetails';
 import Login from '../screens/Login';
@@ -16,42 +15,45 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import NewsDetailsScreen from '../components/NewsDetail';
 import CustomDropdown from '../screens/About/DropDown';
 import SignUpForm from '../screens/SignUp';
-import Team from '../screens/Team/Team';
-import TeamDropdown from '../screens/Team/TeamDropdown';
-import Support from '../screens/Support/SupportDropDown';
-import Member from '../screens/MemberShip/MemberShip';
-import SupportDropdown from '../screens/Support/SupportDropDown';
-import MemberDropdown from '../screens/MemberShip/MemberDropdown';
 import AboutDetailsPage from '../screens/About/AboutDetailsPage';
 import SplashScreen from '../screens/SplashScreen';
 import {useNavigation} from '@react-navigation/native';
 import DrawerProfile from '../screens/Profile/DrawerProfile';
-import TeamDetailsPage from '../screens/Team/TeamDetailsPage';
-import SupportDetailsPage from '../screens/Support/SupportDetailsPage';
-import MemberDetailsPage from '../screens/MemberShip/MemberDetailsPage';
+import Events from '../screens/Events/Events';
+import Gallery from '../screens/Gallery/Gallery';
+import SCM from '../screens/SCM/Scm';
+import EventDropdown from '../screens/Events/EventDropdown';
+import GalleryDropdown from '../screens/Gallery/GalleryDropdown';
+import DrawerNews from '../screens/News/DrawerNews';
+import DrawerInterDiv from '../screens/interNational Divisions/DrawerInterDiv';
+import CarouselComponent from '../screens/News/News';
+import Contact from '../screens/Contact/Contact';
+import DrawerContact from '../screens/Contact/DrawerContact';
+import InterDivisionDetails from '../screens/interNational Divisions/interDivisionDetails';
+import ScmDetails from '../screens/SCM/ScmDetails';
 
 const Drawer = createDrawerNavigator();
 
 const AboutItems = [
   {id: 1, label: 'Introduction', navigation: '1'},
-  {id: 3, label: 'Founder & President '},
+  {id: 9, label: 'Founder & President '},
   {id: 4, label: 'Activities'},
-  {id: 6, label: 'Support Services'},
-  {id: 7, label: 'Membership'},
+  {id: 17, label: 'Support Services'},
+  {id: 18, label: 'Membership'},
 ];
 
 const EventItems = [
   {
-    id: 1,
+    id: 20,
     label: 'Forthcoming',
   },
   {
-    id: 10,
+    id: 30,
     label: 'Past Events ',
   },
 ];
 
-const Gallery = [
+const GalleryItems = [
   {
     id: 1,
     label: 'Photos',
@@ -61,61 +63,23 @@ const Gallery = [
     label: 'Videos',
   },
 ];
-const TeamItems = [
+const News = 'News';
+const interNational = [
   {
-    id: 9,
-    label: 'Founder & President',
-  },
-  {
-    id: 10,
-    label: 'National Advisory Board',
-  },
-  {
-    id: 11,
-    label: 'Members of National Advisory Board',
-  },
-  {
-    id: 12,
-    label: 'Members of International Advisory Board',
+    id: 19,
+    label: 'International Divisions',
   },
 ];
-
-const SupportItems = [
+const ContactItem = [
   {
-    id: 13,
-    label: 'Indian SMEs',
-  },
-  {
-    id: 14,
-    label: 'Overseas SMEs',
+    id: 19,
+    label: 'Contact',
   },
 ];
-const MemberItems1 = [
+const Scm = [
   {
-    id: 15,
-    label: 'Membership Advantages',
-  },
-  {
-    id: 17,
-    label: 'Membership Categories',
-  },
-  {
-    id: 18,
-    label: 'Apply for Membership',
-  },
-];
-const MemberItems2 = [
-  {
-    id: 16,
-    label: 'Membership Advantages',
-  },
-  {
-    id: 17,
-    label: 'Membership Categories',
-  },
-  {
-    id: 18,
-    label: 'Apply for Membership',
+    id: 20,
+    label: 'SME Connect - Magazine',
   },
 ];
 
@@ -125,7 +89,7 @@ const CustomDrawerContent = props => {
   return (
     <DrawerContentScrollView {...props}>
       <View>
-        <Text>Hii profile</Text>
+        <DrawerProfile />
       </View>
       {Object.entries(props.descriptors).map(([key, descriptor], index) => {
         const focused = index === props.state.index;
@@ -161,34 +125,50 @@ const CustomDrawerContent = props => {
                   setActive={setActive}
                 />
               )}
-              {descriptor.route.name === 'Team' && (
-                <TeamDropdown
-                  label="Team"
+              {descriptor.route.name === 'Events' && (
+                <EventDropdown
+                  label="Events"
+                  items={EventItems}
                   active={active}
                   setActive={setActive}
-                  items={TeamItems}
                 />
               )}
-              {/* {descriptor.route.name === 'Support' && (
-                <SupportDropdown
-                  label="Support"
+              {descriptor.route.name === 'InterDivisions' && (
+                <DrawerInterDiv
+                  label="International Divisions"
+                  items={interNational}
                   active={active}
                   setActive={setActive}
-                  items={SupportItems}
-                />
-              )} */}
-              {descriptor.route.name === 'Member' && (
-                <MemberDropdown
-                  label="Member"
-                  active={active}
-                  setActive={setActive}
-                  items={MemberItems1}
-                  items1={MemberItems2}
                 />
               )}
-              {descriptor.route.name === 'Profile' && (
-                <DrawerProfile
-                  label="Profile"
+              {descriptor.route.name === 'SCM' && (
+                <SCM
+                  label="SME Connect - Magazine"
+                  items={Scm}
+                  active={active}
+                  setActive={setActive}
+                />
+              )}
+              {descriptor.route.name === 'News' && (
+                <DrawerNews
+                  label="News"
+                  items={News}
+                  active={active}
+                  setActive={setActive}
+                />
+              )}
+              {descriptor.route.name === 'Gallery' && (
+                <GalleryDropdown
+                  label="Gallery"
+                  items={GalleryItems}
+                  active={active}
+                  setActive={setActive}
+                />
+              )}
+              {descriptor.route.name === 'DrawerContact' && (
+                <DrawerContact
+                  label="Contact"
+                  items={ContactItem}
                   active={active}
                   setActive={setActive}
                 />
@@ -233,7 +213,6 @@ const DrawerNavigator = () => {
           headerShown: route.name !== 'Login' && route.name !== 'SplashScreen', // Hide header on 'Login' and 'SplashScreen' routes
           headerStyle: {
             backgroundColor: '#EAE9E5',
-            height: 60,
           },
           headerTitle: '',
           headerLeft: () => (
@@ -258,18 +237,6 @@ const DrawerNavigator = () => {
         drawerContent={props => (
           <CustomDrawerContent {...props} navigation={navigation} />
         )}>
-        {/* <Drawer.Screen
-          name="Profile"
-          component={Profile}
-          options={{
-            title: 'Profile',
-            headerTitleStyle: {
-              fontSize: 18,
-              color: '#000',
-            },
-            display: false,
-          }}
-        /> */}
         <Drawer.Screen
           name="MainHome"
           component={BottomTabNavigator}
@@ -297,6 +264,117 @@ const DrawerNavigator = () => {
         />
 
         <Drawer.Screen
+          name="Events"
+          component={Events}
+          options={{
+            title: 'Event',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+
+        <Drawer.Screen
+          name="InterDivisions"
+          component={DrawerInterDiv}
+          options={{
+            title: 'International Divisions',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+        <Drawer.Screen
+          name="SCM"
+          component={SCM}
+          options={{
+            title: 'SCM',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+        <Drawer.Screen
+          name="News"
+          component={CarouselComponent}
+          options={{
+            title: 'News',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Gallery"
+          component={Gallery}
+          options={{
+            title: 'Event',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+        <Drawer.Screen
+          name="DrawerContact"
+          component={DrawerContact}
+          options={{
+            title: 'DrawerContact',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+        <Drawer.Screen
+          name="Contact"
+          component={Contact}
+          options={{
+            title: 'Contact',
+            headerTitleStyle: {
+              fontSize: 18,
+              color: '#000',
+            },
+            display: false,
+          }}
+        />
+
+        <Drawer.Screen
+          name="InterDivisionDetails"
+          component={InterDivisionDetails}
+          options={{
+            drawerItemStyle: {
+              display: 'none',
+              height: 0,
+              width: 0,
+            },
+            display: false,
+          }}
+        />
+        <Drawer.Screen
+          name="ScmDetails"
+          component={ScmDetails}
+          options={{
+            drawerItemStyle: {
+              display: 'none',
+              height: 0,
+              width: 0,
+            },
+            display: false,
+          }}
+        />
+
+        <Drawer.Screen
           name="eventDetails"
           component={EventDetails}
           options={{
@@ -309,7 +387,7 @@ const DrawerNavigator = () => {
           }}
         />
         <Drawer.Screen
-          name="ConferenceDetails"
+          name="galleryDetails"
           component={ConferenceDetails}
           options={{
             drawerItemStyle: {
@@ -349,59 +427,12 @@ const DrawerNavigator = () => {
             display: false,
           }}
         />
-        <Drawer.Screen
-          name="Team"
-          component={Team}
-          options={{
-            title: 'Team',
-            display: false,
-          }}
-        />
-        <Drawer.Screen
-          name="Support"
-          component={Support}
-          options={{
-            title: 'Support',
-            display: false,
-          }}
-        />
-        <Drawer.Screen
-          name="Member"
-          component={Member}
-          options={{
-            title: 'Member',
-            display: false,
-          }}
-        />
+
         <Drawer.Screen
           name="AboutDetails"
           component={AboutDetailsPage}
           options={{
             title: 'AboutDetails',
-            display: false,
-          }}
-        />
-        <Drawer.Screen
-          name="TeamDetailsPage"
-          component={TeamDetailsPage}
-          options={{
-            title: 'TeamDetailsPage',
-            display: false,
-          }}
-        />
-        <Drawer.Screen
-          name="SupportDetailsPage"
-          component={SupportDetailsPage}
-          options={{
-            title: 'SupportDetailsPage',
-            display: false,
-          }}
-        />
-        <Drawer.Screen
-          name="MemberDetailsPage"
-          component={MemberDetailsPage}
-          options={{
-            title: 'MemberDetailsPage',
             display: false,
           }}
         />

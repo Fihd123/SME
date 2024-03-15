@@ -4,10 +4,10 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/Feather';
 import Home from '../screens/Home';
-import ContactScreen from '../screens/Contact';
+import ContactScreen from '../screens/Contact/DrawerContact';
 import About from '../screens/About/About';
-import Events from '../screens/Events';
-import Conference from '../screens/Conference';
+import Events from '../screens/Events/Events';
+import Gallery from '../screens/Gallery/Gallery';
 import Profile from '../screens/Profile/Profile';
 import {View} from 'react-native';
 const Tab = createBottomTabNavigator();
@@ -65,10 +65,10 @@ const BottomTabNavigator = () => {
           }}
         />
         <Tab.Screen
-          name="Conference"
-          component={Conference}
+          name="Gallery"
+          component={Gallery}
           options={{
-            tabBarLabel: 'Conference',
+            tabBarLabel: 'Gallery',
             tabBarIcon: ({color, size}) => (
               <MaterialIcons name="contacts" color={color} size={size} />
             ),
