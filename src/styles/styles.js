@@ -7,7 +7,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#EAE9E5',
   },
-
+  // backgroundVideo: {
+  //   position: 'absolute',
+  //   top: 0,
+  //   left: 0,
+  //   bottom: 0,
+  //   right: 0,
+  // },
   imagesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -58,7 +64,7 @@ const styles = StyleSheet.create({
   },
 
   title: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#363636',
     fontWeight: '600',
     lineHeight: 16,

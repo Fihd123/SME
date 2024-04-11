@@ -1,20 +1,16 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {
-  View,
-  Text,
-  TouchableOpacity,
-  StyleSheet,
-  Image,
-  ScrollView,
-} from 'react-native';
-import Navbar from '../../components/Navbar';
+import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
 import logo from '../../assets/SME_LOGO.png';
+import {CommonActions} from '@react-navigation/native';
+import {NavigationContext} from '../../Context/NavigationContext';
+import Main from '../../Navigation/Main';
 
 const Profile = ({navigation}) => {
   const [userEmail, setUserEmail] = useState(null);
   const [userToken, setUserToken] = useState(null);
+  const {isLoggedIn, setIsLoggedIn} = useContext(NavigationContext);
 
   useEffect(() => {
     const fetchUserEmail = async () => {
@@ -34,34 +30,41 @@ const Profile = ({navigation}) => {
   const navigateToLoginWithClearStorage = async () => {
     try {
       await AsyncStorage.clear();
-      console.log('AsyncStorage cleared');
+      setIsLoggedIn(false);
+      console.log(isLoggedIn);
       navigation.navigate('Login');
+
+      console.log('all previous states are cleared... ');
     } catch (error) {
       console.error('Error clearing AsyncStorage:', error);
     }
   };
 
   return (
-    <View style={{flex: 1}}>
-      <ScrollView contentContainerStyle={styles.container}>
-        <TouchableOpacity
-          onPress={navigateToLoginWithClearStorage}
+    <View
+      style={{
+        flex: 1,
+        flexGrow: 1,
+        justifyContent: 'center',
+        backgroundColor: '#EAE9E5',
+      }}>
+      <View
+        style={{
+          justifyContent: 'center',
+          alignItems: 'center',
+        }}>
+        <Image style={styles.profileImage} source={logo} />
+        <Text
           style={{
-            justifyContent: 'flex-end',
-            alignItems: 'flex-end',
-            marginHorizontal: 25,
-            marginVertical: 10,
+            fontSize: 20,
+            fontWeight: '500',
+            color: 'black',
+            marginTop: 10,
           }}>
-          <AntDesign name="logout" size={25} color="black" />
-        </TouchableOpacity>
-
-        <View style={{justifyContent: 'center', alignItems: 'center'}}>
-          <Image style={styles.profileImage} source={logo} />
-          <Text style={{fontSize: 20, fontWeight: '500', color: 'black'}}>
-            @username{' '}
-          </Text>
-        </View>
-
+          {userEmail}
+        </Text>
+      </View>
+      {/* 
         <View style={styles.personalInfo}>
           <View style={styles.infoRow}>
             <Text style={styles.infoTextHeading}>Name:</Text>
@@ -95,17 +98,33 @@ const Profile = ({navigation}) => {
             <Text style={styles.infoTextHeading}>Member Since:</Text>
             <Text style={styles.infoText}>12/11/2016</Text>
           </View>
-        </View>
-      </ScrollView>
+        </View> */}
+
+      <TouchableOpacity
+        style={{
+          justifyContent: 'flex-end',
+          alignItems: 'center',
+          marginTop: 10,
+        }}
+        onPress={navigateToLoginWithClearStorage}>
+        <Text
+          style={{
+            backgroundColor: '#fff',
+            paddingHorizontal: 15,
+            paddingVertical: 10,
+            borderRadius: 20,
+            fontWeight: '600',
+            color: 'black',
+          }}>
+          Logout
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flexGrow: 1,
-    backgroundColor: '#EAE9E5',
-  },
+  container: {},
   button: {
     margin: 10,
     padding: 10,
@@ -120,7 +139,7 @@ const styles = StyleSheet.create({
   },
   personalInfo: {
     marginStart: 15,
-    marginTop: 20,
+    // marginTop: 20,
     marginBottom: 30,
     flex: 1,
     justifyContent: 'space-evenly',

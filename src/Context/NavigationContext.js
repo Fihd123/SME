@@ -1,15 +1,22 @@
-import React, {createContext, useContext} from 'react';
-import NavigationContainerWrapper from '../Navigation';
-import StackRoutes from '../Navigation/index';
+import React, {createContext, useContext, useState} from 'react';
+import NavigationContainerWrapper from '../Navigation/LoginStack';
+import StackRoutes from '../Navigation/LoginStack';
 
-const NavigationContext = createContext();
+export const NavigationContext = createContext();
 
-export const useNavigation = () => useContext(NavigationContext);
+export const NavigationProvider = ({children}) => {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
-export const NavigationProvider = ({children, navigation}) => {
+  const updateLogin = () => {
+    setIsLoggedIn(true);
+  };
+  const value = {
+    isLoggedIn,
+    setIsLoggedIn,
+    updateLogin,
+  };
   return (
-    <NavigationContext.Provider value={navigation}>
-      {/* <StackRoutes /> */}
+    <NavigationContext.Provider value={value}>
       {children}
     </NavigationContext.Provider>
   );

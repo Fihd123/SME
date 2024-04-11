@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useContext} from 'react';
 import {
   View,
   Text,
@@ -6,34 +6,52 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  Dimensions,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import bgimg from '../assets/login-bg.jpg';
 import '../components/global';
+import {NavigationContext} from '../Context/NavigationContext';
+import {useNavigation} from '@react-navigation/native';
+const screenWidth = Dimensions.get('screen').width;
 
-const Login = ({navigation}) => {
+const Login = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [otp, setOtp] = useState('');
   const [errorText, setErrorText] = useState('');
   const [msg, setMsg] = useState('');
-  // console.log('Navigation prop:    ', navigation);
 
-  const navigateToSignUp = async () => {
-    navigation.navigate('Signup');
-  };
+  const {isLoggedIn, setIsLoggedIn} = useContext(NavigationContext);
 
-  const checkLoggedIn = async () => {
+  const getOtp = async () => {
     try {
-      const storedEmail = await AsyncStorage.getItem('userEmail');
-      if (storedEmail) {
-        navigation?.navigate('MainHome');
-        global.loggedIn = true;
+      if (!email) throw new Error('Please enter your email.');
+      if (email.length < 6)
+        throw new Error('Email must be at least 6 characters long.');
+
+      const response = await axios.post(
+        `https://smeapp.havock.org/api/get-otp`,
+        {email: email},
+      );
+
+      if (response.data.status) {
+        setMsg(response.data.message);
+
+        setTimeout(() => {
+          setMsg('');
+        }, 3000);
       } else {
-        navigation?.navigate('Login');
+        setErrorText(response.data.message);
+        setTimeout(() => {
+          setErrorText('');
+        }, 3000);
       }
     } catch (error) {
-      console.error('Error checking login status:', error);
+      setErrorText(error.message);
+      setTimeout(() => {
+        setErrorText('');
+      }, 3000);
     }
   };
 
@@ -43,62 +61,36 @@ const Login = ({navigation}) => {
         'https://smeapp.havock.org/api/loginauth',
         {
           email: email,
-          password: password,
+          password: otp,
         },
       );
 
+      console.log(otp);
       if (response.data.status) {
+        // Handle successful login
         await AsyncStorage.setItem('userEmail', email);
         await AsyncStorage.setItem('userToken', response.data.token);
-        await AsyncStorage.setItem('LoginStatus', JSON.stringify(true));
+        await AsyncStorage.setItem('LoginStatus', JSON.stringify(isLoggedIn));
 
-        global.loggedIn = true;
-
+        setIsLoggedIn(true);
+        setEmail('');
+        setOtp('');
         setMsg(response.data.message);
-
-        console.log(global.loggedIn);
-        logAsyncStorageData();
-        navigation.navigate('MainHome');
       } else {
-        global.loggedIn = false;
+        setIsLoggedIn(false);
+        // global.loggedIn = false;
         setErrorText(response.data.message);
         setTimeout(() => {
           setErrorText('Error while logging...');
         }, 1500);
       }
     } catch (error) {
-      console.error('Login error:', error);
-      if (error.response) {
-        console.error('Error response:', error.response);
-        setErrorText('Login failed. Please try again.');
-      } else if (error.request) {
-        console.error('No response received:', error.request);
-        setErrorText('No response received from server. Please try again.');
-      } else {
-        console.error('Error during request setup:', error.message);
-        setErrorText('Error during request setup. Please try again.');
-      }
+      setErrorText(error.message);
+      setTimeout(() => {
+        setErrorText('');
+      }, 3000);
     }
   };
-
-  const logAsyncStorageData = async () => {
-    try {
-      const userEmail = await AsyncStorage.getItem('userEmail');
-      const userToken = await AsyncStorage.getItem('userToken');
-      const loginStatus = await AsyncStorage.getItem('LoginStatus');
-
-      console.log('User Email:', userEmail);
-      console.log('User Token:', userToken);
-      console.log('Login Status:', loginStatus);
-    } catch (error) {
-      console.error('Error retrieving AsyncStorage data:', error);
-    }
-  };
-
-  useEffect(() => {
-    checkLoggedIn();
-    logAsyncStorageData();
-  }, [navigation]);
 
   return (
     <View style={{flex: 1}}>
@@ -107,49 +99,40 @@ const Login = ({navigation}) => {
         <Text style={styles.title}>Welcome To SME Chamber</Text>
         <TextInput
           style={styles.input}
-          placeholder="Email"
+          placeholder="Email/Number"
           onChangeText={text => setEmail(text)}
           value={email}
-          keyboardType="email-address"
+          keyboardType="phone-pad" // Change keyboardType to "phone-pad"
         />
 
+        <TouchableOpacity
+          onPress={() => getOtp()}
+          style={{justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+          <Text
+            style={{
+              color: '#fff',
+              padding: 5,
+              backgroundColor: '#1F2544',
+              borderRadius: 15,
+              width: screenWidth / 4,
+              textAlign: 'center',
+              fontSize: 12,
+              fontWeight: '600',
+              textTransform: 'capitalize',
+            }}>
+            send otp
+          </Text>
+        </TouchableOpacity>
         <TextInput
           style={styles.input}
-          placeholder="Password"
+          placeholder="OTP"
           secureTextEntry={true}
-          onChangeText={text => setPassword(text)}
-          value={password}
+          onChangeText={text => setOtp(text)}
+          value={otp}
         />
 
         <TouchableOpacity style={styles.button} onPress={handleLogin}>
           <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginTop: 8,
-          }}
-          onPress={handleLogin}>
-          <Text
-            style={{
-              textAlign: 'center',
-              fontSize: 12,
-            }}>
-            DONT HAVE AN ACCOUNT?{' '}
-          </Text>
-          <Text
-            style={{
-              color: 'black',
-              fontWeight: '600',
-              fontSize: 13,
-              marginLeft: 2,
-            }}
-            onPress={() => navigateToSignUp()}>
-            SIGN UP
-          </Text>
         </TouchableOpacity>
 
         {msg ? (
@@ -180,7 +163,7 @@ const styles = StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0.5,
     borderRadius: 8,
-    marginBottom: 16,
+    marginBottom: 12,
     padding: 8,
     width: '100%',
   },

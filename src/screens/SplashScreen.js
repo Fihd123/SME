@@ -1,34 +1,29 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import {Text, Image, View, Dimensions} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLogo from '../assets/APP-Screen.jpg';
 import {useNavigation} from '@react-navigation/native';
+import {NavigationContext} from '../Context/NavigationContext';
 
-const SplashScreen = ({navigation}) => {
+const SplashScreen = () => {
+  const {isLoggedIn, setIsLoggedIn} = useContext(NavigationContext);
   useEffect(() => {
-    const checkLoginAndNavigate = async () => {
+    const checkLoginStatus = async () => {
       try {
-        const loginStatus = await AsyncStorage.getItem('LoginStatus');
-        if (loginStatus === 'true' || loginStatus === true) {
-          setTimeout(() => {
-            navigation.navigate('MainHome');
-          }, 2000);
+        const storedEmail = await AsyncStorage.getItem('userEmail');
+        if (storedEmail) {
+          setIsLoggedIn(true);
         } else {
-          setTimeout(() => {
-            navigation.navigate('Login');
-          }, 2000);
+          setIsLoggedIn(false);
         }
       } catch (error) {
-        console.error('Error reading login status:', error);
+        console.error('Error checking login status:', error);
       }
     };
 
-    checkLoginAndNavigate();
-  }, [navigation]);
+    checkLoginStatus();
+  }, []);
 
-  // setTimeout(() => {
-  //   navigation.navigate('MainHome');
-  // }, 2000);
   return (
     <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
       <Image

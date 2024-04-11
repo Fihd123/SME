@@ -88,93 +88,91 @@ const CustomDrawerContent = props => {
 
   return (
     <DrawerContentScrollView {...props}>
-      <View>
+      {/* <View>
         <DrawerProfile />
-      </View>
+      </View> */}
       {Object.entries(props.descriptors).map(([key, descriptor], index) => {
         const focused = index === props.state.index;
         return (
-          <>
-            <View key={key} style={{flex: 1}}>
-              {descriptor.options.display && (
-                <DrawerItem
-                  key={key}
-                  label={() => (
-                    <Text
-                      style={
-                        focused ? styles.drawerLabelFocused : styles.drawerLabel
-                      }>
-                      {descriptor.options.title}
-                    </Text>
-                  )}
-                  onPress={() => {
-                    console.log('Navigating to:', descriptor.route.name);
-                    descriptor.navigation.navigate(descriptor.route.name);
-                  }}
-                  style={[
-                    styles.drawerItem,
-                    focused ? styles.drawerItemFocused : null,
-                  ]}
-                />
-              )}
-              {descriptor.route.name === 'About' && (
-                <CustomDropdown
-                  label="About "
-                  items={AboutItems}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-              {descriptor.route.name === 'Events' && (
-                <EventDropdown
-                  label="Events"
-                  items={EventItems}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-              {descriptor.route.name === 'InterDivisions' && (
-                <DrawerInterDiv
-                  label="International Divisions"
-                  items={interNational}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-              {descriptor.route.name === 'SCM' && (
-                <SCM
-                  label="SME Connect - Magazine"
-                  items={Scm}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-              {descriptor.route.name === 'News' && (
-                <DrawerNews
-                  label="News"
-                  items={News}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-              {descriptor.route.name === 'Gallery' && (
-                <GalleryDropdown
-                  label="Gallery"
-                  items={GalleryItems}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-              {descriptor.route.name === 'DrawerContact' && (
-                <DrawerContact
-                  label="Contact"
-                  items={ContactItem}
-                  active={active}
-                  setActive={setActive}
-                />
-              )}
-            </View>
-          </>
+          <View key={key} style={{flex: 1}}>
+            {descriptor.options.display && (
+              <DrawerItem
+                key={key}
+                label={() => (
+                  <Text
+                    style={
+                      focused ? styles.drawerLabelFocused : styles.drawerLabel
+                    }>
+                    {descriptor.options.title}
+                  </Text>
+                )}
+                onPress={() => {
+                  console.log('Navigating to:', descriptor.route.name);
+                  descriptor.navigation.navigate(descriptor.route.name);
+                }}
+                style={[
+                  styles.drawerItem,
+                  focused ? styles.drawerItemFocused : null,
+                ]}
+              />
+            )}
+            {descriptor.route.name === 'About' && (
+              <CustomDropdown
+                label="About "
+                items={AboutItems}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+            {descriptor.route.name === 'Events' && (
+              <EventDropdown
+                label="Events"
+                items={EventItems}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+            {descriptor.route.name === 'InterDivisions' && (
+              <DrawerInterDiv
+                label="International Divisions"
+                items={interNational}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+            {descriptor.route.name === 'SCM' && (
+              <SCM
+                label="SME Connect - Magazine"
+                items={Scm}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+            {descriptor.route.name === 'News' && (
+              <DrawerNews
+                label="News"
+                items={News}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+            {descriptor.route.name === 'Gallery' && (
+              <GalleryDropdown
+                label="Gallery"
+                items={GalleryItems}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+            {descriptor.route.name === 'DrawerContact' && (
+              <DrawerContact
+                label="Contact"
+                items={ContactItem}
+                active={active}
+                setActive={setActive}
+              />
+            )}
+          </View>
         );
       })}
     </DrawerContentScrollView>
@@ -184,33 +182,11 @@ const CustomDrawerContent = props => {
 const DrawerNavigator = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigation = useNavigation();
-
-  const checkLoginStatus = async () => {
-    try {
-      const loginStatus = await AsyncStorage.getItem('LoginStatus');
-      if (loginStatus) {
-        console.log('Navigating to MainHome');
-        navigation.navigate('MainHome');
-      } else {
-        console.log('Navigating to Login');
-        navigation.navigate('Login');
-      }
-      setIsLoggedIn(loginStatus === 'true');
-      console.log('Login Status from async storage: ', loginStatus);
-    } catch (error) {
-      console.error('Error reading login status:', error);
-    }
-  };
-
-  useEffect(() => {
-    checkLoginStatus();
-  }, []);
   return (
     <>
       <Drawer.Navigator
-        initialRouteName={isLoggedIn ? 'MainHome' : 'SplashScreen'}
         screenOptions={({navigation, route}) => ({
-          headerShown: route.name !== 'Login' && route.name !== 'SplashScreen', // Hide header on 'Login' and 'SplashScreen' routes
+          headerShown: route.name !== 'Login',
           headerStyle: {
             backgroundColor: '#EAE9E5',
           },
@@ -238,7 +214,7 @@ const DrawerNavigator = () => {
           <CustomDrawerContent {...props} navigation={navigation} />
         )}>
         <Drawer.Screen
-          name="MainHome"
+          name="BottomTab"
           component={BottomTabNavigator}
           options={{
             title: 'Home',
@@ -433,14 +409,6 @@ const DrawerNavigator = () => {
           component={AboutDetailsPage}
           options={{
             title: 'AboutDetails',
-            display: false,
-          }}
-        />
-        <Drawer.Screen
-          name="SplashScreen"
-          component={SplashScreen}
-          options={{
-            title: 'SplashScreen',
             display: false,
           }}
         />

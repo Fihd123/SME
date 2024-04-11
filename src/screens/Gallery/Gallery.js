@@ -7,11 +7,17 @@ import {
   TouchableOpacity,
   FlatList,
   StyleSheet,
+  Modal,
+  Dimensions,
+  Linking,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import Navbar from '../../components/Navbar';
 import {ENTRIES1, ENTRIES2} from '../../assets/json/Entries';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import img2 from '../../assets/img2.png';
+import img1 from '../../assets/img1.png';
+import img3 from '../../assets/img3.png';
+import img4 from '../../assets/img4.png';
 
 const ConfCard = ({item, onPress, index}) => {
   const [thumbnailUrl, setThumbnailUrl] = useState(item.thumbnail);
@@ -36,7 +42,7 @@ const ConfCard = ({item, onPress, index}) => {
 
 function ForthComingConferences({navigation}) {
   const navigateToDetail = item => {
-    navigation.navigate('ConferenceDetails', {item});
+    navigation.navigate('galleryDetails', {item});
   };
 
   const renderGridItem = ({item}) => (
@@ -57,34 +63,89 @@ function ForthComingConferences({navigation}) {
 
 function PastConferences({navigation}) {
   const [pastConf, setPastconf] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
-  const navigateToDetail = item => {
-    navigation.navigate('ConferenceDetails', {itemId: item.id, item});
+  const handleVideoPress = url => {
+    if (url) {
+      Linking.openURL(url);
+    }
   };
 
-  const renderGridItem = ({item}) => (
-    <ConfCard item={item} onPress={() => navigateToDetail(item)} />
-  );
+  const videoItem = [
+    {
+      id: 1,
+      title: 'SME MANUFACTURERS AND EXPORTERS SUMIIT - Session - II',
+      image: img4,
+      url: 'https://www.youtube.com/watch?v=N3MWn576AP4',
+    },
+    {
+      id: 2,
+      title:
+        'SME BUISINESS FORUM MEET - How to increase your sales with the help of CRM | 20 March 2024',
+      image: img1,
+      url: 'https://www.youtube.com/watch?v=EA7xOaeCvxs',
+    },
+    {
+      id: 3,
+      title:
+        'SME INDUSTRY SUMMIT - Panel Discussion on SME’s Digitization Growth Strategy',
+      image: img2,
+      url: 'https://www.youtube.com/watch?v=KaFQQmmyHac',
+    },
+    {
+      id: 4,
+      title:
+        'MARATHI BUSINESS FORUM - Supporting Marathi Entrepreneurs for better business growth',
+      image: img3,
+      url: 'https://www.youtube.com/watch?v=SrlLcklD5ps',
+    },
+  ];
+
+  const openImageModal = image => {
+    setSelectedImage(image);
+    setModalVisible(true);
+  };
+
+  const closeImageModal = () => {
+    setModalVisible(false);
+  };
+
+  const renderItem = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.parentCard}
+        onPress={() => handleVideoPress(item.url)}>
+        <View style={styles.card}>
+          <Image style={styles.images} source={item.image} resizeMode="cover" />
+
+          <Text style={styles.title}>{item.title.slice(0, 20)}...</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+
   useEffect(() => {
     const fetchPastConf = async () => {
       try {
         const userToken = await AsyncStorage.getItem('userToken');
-
-        const response = await fetch(
-          'https://smeapp.havock.org/api/past-conferences',
-          {
-            method: 'GET',
-            headers: {
-              Accept: 'application/json',
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${userToken}`,
-            },
+        const response = await fetch('https://smeapp.havock.org/api/albums', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
           },
-        );
+        });
 
         if (response.ok) {
           const data = await response.json();
-          console.log('User token', userToken);
+
+          // Log the gallery images for each item in the data
+          // data.forEach(item => {
+          //   console.log('Gallery images:', item.gallery_image);
+          // });
+
           setPastconf(data);
         } else {
           console.error('Error fetching data:', response.statusText);
@@ -100,11 +161,25 @@ function PastConferences({navigation}) {
   return (
     <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
       <FlatList
-        data={pastConf}
+        data={videoItem}
+        renderItem={renderItem}
+        keyExtractor={(item, index) => index.toString()}
+        showsHorizontalScrollIndicator={false}
         numColumns={2}
-        renderItem={renderGridItem}
-        keyExtractor={item => item.id.toString()}
       />
+      <Modal
+        visible={modalVisible}
+        transparent={true}
+        onRequestClose={closeImageModal}>
+        <View style={styles.modalContainer}>
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={closeImageModal}>
+            <Text style={styles.closeButtonText}>Close</Text>
+          </TouchableOpacity>
+          <Image source={{uri: selectedImage}} style={styles.modalImage} />
+        </View>
+      </Modal>
     </View>
   );
 }
@@ -199,5 +274,26 @@ const styles = StyleSheet.create({
     fontSize: 15,
     padding: 3,
     fontWeight: '700',
+  },
+  modalContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+  },
+  modalCloseButton: {
+    position: 'absolute',
+    top: 190,
+    right: 25,
+    zIndex: 1, // Ensure button is above the modal content
+  },
+  closeButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modalImage: {
+    width: Dimensions.get('window').width - 40, // Take full width minus some padding
+    height: Dimensions.get('window').height - 80, // Take full height minus some padding
+    resizeMode: 'contain', // Ensure the image fits inside the modal
   },
 });

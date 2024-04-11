@@ -1,55 +1,87 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {Alert, SafeAreaView} from 'react-native';
+import { SafeAreaView, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import DrawerNavigator from './src/Navigation/Drawer';
 import messaging from '@react-native-firebase/messaging';
+import firebase from '@react-native-firebase/app';
+import PushNotification from 'react-native-push-notification';
+import SplashScreen from './src/screens/SplashScreen';
+import Main from './src/Navigation/Main';
+import {NavigationProvider} from './src/Context/NavigationContext';
+import PushNotificationIOS from '@react-native-community/push-notification-ios';
 
 const App = () => {
-  const [messages, setMessages] = useState([]);
-
-  // Function to handle incoming notifications
-  const handleNotification = async (remoteMessage: {notification: any}) => {
-    const {notification} = remoteMessage;
-    if (notification) {
-      const {body, title, android} = notification;
-      const avatar = android?.imageUrl;
-
-      // Update state with new message
-      setMessages(prevMessages => [
-        ...prevMessages,
-        {
-          _id: Math.round(Math.random() * 1000000),
-          text: body,
-          createdAt: new Date(),
-          user: {
-            _id: 2,
-            name: 'PartyB',
-            avatar: avatar,
-          },
-        },
-      ]);
-
-      // Show an alert to the user
-      Alert.alert(title, body);
-    }
-  };
+  const [message, setMessage] = useState([]);
+  const [splash, setSplash] = useState(true);
 
   useEffect(() => {
-    // Subscribe to incoming messages
-    const unsubscribe = messaging().onMessage(handleNotification);
+    setTimeout(() => {
+      setSplash(false);
+    }, 2000);
 
-    // Clean up subscription when component unmounts
+    const unsubscribe = messaging().onMessage(async remoteMessage => {
+      if (Platform.OS === 'ios') {
+        // For iOS background notifications
+        PushNotificationIOS.addNotificationRequest({
+          title: remoteMessage.notification?.title || '',
+          body: remoteMessage.notification?.body || '',
+          userInfo: remoteMessage.data || {},
+          id: '1',
+        });
+      } else {
+        // For Android background notifications
+        PushNotification.localNotification({
+          title: remoteMessage.notification?.title || '',
+          message: remoteMessage.notification?.body || '',
+          userInfo: remoteMessage.data || {},
+        });
+      }
+    });
+
+    // Clean up function
     return unsubscribe;
   }, []);
 
-  // Initialize navigation ref
-  const navigationRef = useRef();
+  useEffect(() => {
+    const getToken = async () => {
+      const token = await firebase.messaging().getToken();
+      console.log('Token:', token);
+    };
+    getToken();
+
+    const unsubscribe = messaging().setBackgroundMessageHandler(
+      async remoteMessage => {
+        console.log('Background message:', remoteMessage);
+
+        if (Platform.OS === 'ios') {
+          // For iOS background notifications
+          PushNotificationIOS.addNotificationRequest({
+            title: remoteMessage.notification?.title || '',
+            body: remoteMessage.notification?.body || '',
+            userInfo: remoteMessage.data || {},
+            id: '1',
+          });
+        } else {
+          // For Android background notifications
+          PushNotification.localNotification({
+            title: remoteMessage.notification?.title || '',
+            message: remoteMessage.notification?.body || '',
+            userInfo: remoteMessage.data || {},
+          });
+        }
+      },
+    );
+
+    // Clean up function
+    return unsubscribe;
+  }, []);
 
   return (
     <SafeAreaView style={{flex: 1, overflow: 'hidden'}}>
-      <NavigationContainer ref={navigationRef}>
-        <DrawerNavigator />
-      </NavigationContainer>
+      <NavigationProvider>
+        <NavigationContainer>
+          {splash ? <SplashScreen /> : <Main />}
+        </NavigationContainer>
+      </NavigationProvider>
     </SafeAreaView>
   );
 };
