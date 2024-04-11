@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import {
   View,
   Text,
@@ -6,7 +6,6 @@ import {
   TouchableOpacity,
   FlatList,
   ScrollView,
-  ActivityIndicator,
   Linking,
 } from 'react-native';
 import styles from '../styles/styles';
@@ -95,9 +94,9 @@ const Home = () => {
         <View style={styles.header}>
           <Text style={styles.text}>UPCOMING EVENTS</Text>
           <TouchableOpacity
-            style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 8}}
+            style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 7}}
             onPress={() => navigation.navigate('Events')}>
-            <AntDesign name="right" color="grey" size={12} />
+            <AntDesign name="right" color="#000" size={12} />
           </TouchableOpacity>
         </View>
         <View style={{paddingLeft: 15}}>
@@ -112,12 +111,12 @@ const Home = () => {
         <View style={styles.header}>
           <Text style={styles.text}>RECENT VIDEOS</Text>
           <TouchableOpacity
-            style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 8}}
+            style={{backgroundColor: '#E6D88D', borderRadius: 20, padding: 7}}
             onPress={() => navigation.navigate('Gallery')}>
-            <AntDesign name="right" color="grey" size={12} />
+            <AntDesign name="right" color="#000" size={12} />
           </TouchableOpacity>
         </View>
-        <View style={{marginLeft: 10}}>
+        <View style={{paddingLeft: 15}}>
           <FlatList
             horizontal
             data={videoItem}

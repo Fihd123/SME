@@ -27,7 +27,7 @@ const ConfCard = ({item, onPress, index}) => {
   };
 
   return (
-    <TouchableOpacity style={styles.parentCard} onPress={onPress}>
+    <TouchableOpacity style={styles.parentCard}>
       <View style={[styles.card, styles.eventCard]}>
         <Image
           style={styles.images}
@@ -45,9 +45,7 @@ function ForthComingConferences({navigation}) {
     navigation.navigate('galleryDetails', {item});
   };
 
-  const renderGridItem = ({item}) => (
-    <ConfCard item={item} onPress={() => navigateToDetail(item)} />
-  );
+  const renderGridItem = ({item}) => <ConfCard item={item} />;
 
   return (
     <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
@@ -271,9 +269,10 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   title: {
-    fontSize: 15,
-    padding: 3,
+    fontSize: 14,
+    padding: 4,
     fontWeight: '700',
+    textTransform: 'capitalize',
   },
   modalContainer: {
     flex: 1,

@@ -7,13 +7,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#EAE9E5',
   },
-  // backgroundVideo: {
-  //   position: 'absolute',
-  //   top: 0,
-  //   left: 0,
-  //   bottom: 0,
-  //   right: 0,
-  // },
   imagesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -21,7 +14,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
     paddingTop: 15,
     paddingBottom: 0,
-    backgroundColor: '#EAE9E5',
+    // backgroundColor: '#EAE9E5',
   },
   logo: {
     width: 60,
@@ -69,11 +62,11 @@ const styles = StyleSheet.create({
     fontWeight: '600',
     lineHeight: 16,
     textAlign: 'left',
-    letterSpacing: -0.5,
-    marginBottom: 3,
+    letterSpacing: 0.3,
     paddingLeft: 5,
-    paddingRight: 10,
-    marginTop: 7,
+    paddingRight: 5,
+    marginTop: 10,
+    textTransform: 'capitalize',
   },
   desc: {
     fontWeight: 'bold',

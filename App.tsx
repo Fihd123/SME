@@ -1,7 +1,9 @@
 import React, {useEffect, useRef, useState} from 'react';
-import { SafeAreaView, Platform} from 'react-native';
+import {SafeAreaView, Platform} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
-import messaging from '@react-native-firebase/messaging';
+import messaging, {
+  FirebaseMessagingTypes,
+} from '@react-native-firebase/messaging';
 import firebase from '@react-native-firebase/app';
 import PushNotification from 'react-native-push-notification';
 import SplashScreen from './src/screens/SplashScreen';
@@ -17,29 +19,7 @@ const App = () => {
     setTimeout(() => {
       setSplash(false);
     }, 2000);
-
-    const unsubscribe = messaging().onMessage(async remoteMessage => {
-      if (Platform.OS === 'ios') {
-        // For iOS background notifications
-        PushNotificationIOS.addNotificationRequest({
-          title: remoteMessage.notification?.title || '',
-          body: remoteMessage.notification?.body || '',
-          userInfo: remoteMessage.data || {},
-          id: '1',
-        });
-      } else {
-        // For Android background notifications
-        PushNotification.localNotification({
-          title: remoteMessage.notification?.title || '',
-          message: remoteMessage.notification?.body || '',
-          userInfo: remoteMessage.data || {},
-        });
-      }
-    });
-
-    // Clean up function
-    return unsubscribe;
-  }, []);
+  });
 
   useEffect(() => {
     const getToken = async () => {
@@ -47,33 +27,64 @@ const App = () => {
       console.log('Token:', token);
     };
     getToken();
-
-    const unsubscribe = messaging().setBackgroundMessageHandler(
-      async remoteMessage => {
-        console.log('Background message:', remoteMessage);
-
-        if (Platform.OS === 'ios') {
-          // For iOS background notifications
-          PushNotificationIOS.addNotificationRequest({
-            title: remoteMessage.notification?.title || '',
-            body: remoteMessage.notification?.body || '',
-            userInfo: remoteMessage.data || {},
-            id: '1',
-          });
-        } else {
-          // For Android background notifications
-          PushNotification.localNotification({
-            title: remoteMessage.notification?.title || '',
-            message: remoteMessage.notification?.body || '',
-            userInfo: remoteMessage.data || {},
-          });
-        }
-      },
-    );
-
-    // Clean up function
-    return unsubscribe;
   }, []);
+
+  const registerForRemoteMessages = () => {
+    firebase
+      .messaging()
+      .registerDeviceForRemoteMessages()
+      .then(() => {
+        console.log('Registered');
+        requestPremissions();
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  const requestPremissions = () => {
+    firebase
+      .messaging()
+      .requestPermission()
+      .then((status: FirebaseMessagingTypes.AuthorizationStatus) => {
+        if (status === 1) {
+          console.log('Authorized ');
+          onMessage();
+        }
+      })
+      .catch(e => {
+        console.log(e);
+      });
+  };
+
+  const onMessage = () => {
+    firebase.messaging().onMessage(response => {
+      showNotification(response.data!.notification);
+    });
+  };
+
+  const showNotification = (notification: any) => {
+    console.log('showing notification ');
+    console.log(JSON.stringify(notification));
+
+    // Set notification priority to high
+    const priority = Platform.OS === 'android' ? 'high' : undefined;
+
+    // Specify the channel ID if needed
+    const channelId = Platform.OS === 'android' ? 'test' : undefined;
+    PushNotification.localNotification({
+      title: notification.title,
+      message: notification.body,
+      priority: priority,
+      channelId: channelId,
+    });
+  };
+
+  if (Platform.OS === 'ios') {
+    registerForRemoteMessages();
+  } else {
+    onMessage();
+  }
 
   return (
     <SafeAreaView style={{flex: 1, overflow: 'hidden'}}>
