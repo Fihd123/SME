@@ -107,7 +107,6 @@ const CustomDrawerContent = props => {
                   </Text>
                 )}
                 onPress={() => {
-                  console.log('Navigating to:', descriptor.route.name);
                   descriptor.navigation.navigate(descriptor.route.name);
                 }}
                 style={[
@@ -202,7 +201,6 @@ const DrawerNavigator = () => {
           headerRight: () => (
             <TouchableOpacity
               onPress={() => {
-                console.log('Toggling drawer');
                 navigation.toggleDrawer();
               }}
               style={styles.headerRight}>

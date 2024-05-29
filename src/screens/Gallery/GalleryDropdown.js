@@ -26,7 +26,6 @@ const GalleryDropdown = ({label, items}) => {
               <TouchableOpacity
                 key={item.id}
                 onPress={() => {
-                  console.log('Events From dropwon');
                   navigation.navigate('Gallery');
                 }}
                 style={{

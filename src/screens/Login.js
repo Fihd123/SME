@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Image,
   Dimensions,
+  ScrollView,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
@@ -21,15 +22,16 @@ const Login = () => {
   const [otp, setOtp] = useState('');
   const [errorText, setErrorText] = useState('');
   const [msg, setMsg] = useState('');
+  const [disabled, setDisable] = useState(false);
+  const [loginDisable, setLoginDisable] = useState(false);
+  const [countDown, setCountDown] = useState(15);
 
   const {isLoggedIn, setIsLoggedIn} = useContext(NavigationContext);
 
   const getOtp = async () => {
-    try {
-      if (!email) throw new Error('Please enter your email.');
-      if (email.length < 6)
-        throw new Error('Email must be at least 6 characters long.');
+    let timer;
 
+    try {
       const response = await axios.post(
         `https://smeapp.havock.org/api/get-otp`,
         {email: email},
@@ -40,23 +42,34 @@ const Login = () => {
 
         setTimeout(() => {
           setMsg('');
-        }, 3000);
+        }, 2500);
+
+        setDisable(true);
+        setCountDown(15);
+
+        timer = setInterval(() => {
+          setCountDown(prevCountdown => {
+            if (prevCountdown <= 1) {
+              clearInterval(timer);
+              setDisable(false);
+            }
+            return prevCountdown - 1;
+          });
+        }, 1000);
       } else {
         setErrorText(response.data.message);
-        setTimeout(() => {
-          setErrorText('');
-        }, 3000);
       }
     } catch (error) {
       setErrorText(error.message);
-      setTimeout(() => {
-        setErrorText('');
-      }, 3000);
     }
   };
 
   const handleLogin = async () => {
     try {
+      if (!email) throw new Error('Please Enter Your Number');
+      if (email.length < 6)
+        throw new Error('Email must be at least 6 characters long.');
+
       const response = await axios.post(
         'https://smeapp.havock.org/api/loginauth',
         {
@@ -65,23 +78,23 @@ const Login = () => {
         },
       );
 
-      console.log(otp);
       if (response.data.status) {
         // Handle successful login
         await AsyncStorage.setItem('userEmail', email);
         await AsyncStorage.setItem('userToken', response.data.token);
         await AsyncStorage.setItem('LoginStatus', JSON.stringify(isLoggedIn));
+        await AsyncStorage.setItem('userId', JSON.stringify(response.data.id));
 
         setIsLoggedIn(true);
         setEmail('');
         setOtp('');
         setMsg(response.data.message);
+        setLoginDisable(true); // Disable the login button
       } else {
         setIsLoggedIn(false);
-        // global.loggedIn = false;
         setErrorText(response.data.message);
         setTimeout(() => {
-          setErrorText('Error while logging...');
+          setErrorText('');
         }, 1500);
       }
     } catch (error) {
@@ -93,21 +106,25 @@ const Login = () => {
   };
 
   return (
-    <View style={{flex: 1}}>
+    <ScrollView contentContainerStyle={{flex: 1}}>
       <Image source={bgimg} style={{width: '100%', height: '50%'}} />
       <View style={styles.container}>
-        <Text style={styles.title}>Welcome To SME Chamber</Text>
+        <Text style={styles.title}>Welcome To SME Chamber of India</Text>
         <TextInput
           style={styles.input}
-          placeholder="Email/Number"
+          placeholder="Enter Number"
           onChangeText={text => setEmail(text)}
           value={email}
-          keyboardType="phone-pad" // Change keyboardType to "phone-pad"
         />
 
         <TouchableOpacity
-          onPress={() => getOtp()}
-          style={{justifyContent: 'flex-end', alignItems: 'flex-end'}}>
+          onPress={getOtp}
+          disabled={disabled}
+          style={{
+            justifyContent: 'flex-end',
+            alignItems: 'flex-end',
+            opacity: disabled ? 0.5 : 1, // Dim button when disabled
+          }}>
           <Text
             style={{
               color: '#fff',
@@ -118,11 +135,12 @@ const Login = () => {
               textAlign: 'center',
               fontSize: 12,
               fontWeight: '600',
-              textTransform: 'capitalize',
+              textTransform: 'uppercase',
             }}>
-            send otp
+            Send OTP
           </Text>
         </TouchableOpacity>
+        <Text>{disabled && `Resend OTP in ${countDown} seconds`}</Text>
         <TextInput
           style={styles.input}
           placeholder="OTP"
@@ -131,7 +149,10 @@ const Login = () => {
           value={otp}
         />
 
-        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={handleLogin}
+          disabled={loginDisable}>
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
 
@@ -141,7 +162,7 @@ const Login = () => {
           <Text style={styles.errorText}>{errorText}</Text>
         ) : null}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 

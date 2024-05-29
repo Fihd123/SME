@@ -1,135 +1,206 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useCallback, useContext, useEffect, useState} from 'react';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import {View, Text, TouchableOpacity, StyleSheet, Image} from 'react-native';
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  ScrollView,
+} from 'react-native';
 import logo from '../../assets/SME_LOGO.png';
-import {CommonActions} from '@react-navigation/native';
 import {NavigationContext} from '../../Context/NavigationContext';
-import Main from '../../Navigation/Main';
+import {useFocusEffect} from '@react-navigation/native';
 
 const Profile = ({navigation}) => {
-  const [userEmail, setUserEmail] = useState(null);
-  const [userToken, setUserToken] = useState(null);
-  const {isLoggedIn, setIsLoggedIn} = useContext(NavigationContext);
-
-  useEffect(() => {
-    const fetchUserEmail = async () => {
-      try {
-        const email = await AsyncStorage.getItem('userEmail');
-        const userToken = await AsyncStorage.getItem('userToken');
-        setUserEmail(email);
-        setUserToken(userToken);
-      } catch (error) {
-        console.error('Error fetching user email from AsyncStorage:', error);
-      }
-    };
-
-    fetchUserEmail();
-  }, []);
+  const {setIsLoggedIn, email, profileData, setProfileData} =
+    useContext(NavigationContext);
 
   const navigateToLoginWithClearStorage = async () => {
     try {
       await AsyncStorage.clear();
       setIsLoggedIn(false);
-      console.log(isLoggedIn);
       navigation.navigate('Login');
-
-      console.log('all previous states are cleared... ');
     } catch (error) {
       console.error('Error clearing AsyncStorage:', error);
     }
   };
 
+  const getProfileInfo = async () => {
+    try {
+      const userId = await AsyncStorage.getItem('userId');
+      const userToken = await AsyncStorage.getItem('userToken');
+      if (!userId || !userToken) {
+        console.log('User ID or user token is undefined');
+        return;
+      }
+
+      const response = await fetch(
+        `https://smeapp.havock.org/api/profile/${userId}?api_token=${userToken}`,
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        },
+      );
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const responseData = await response.json();
+
+      if (responseData && responseData.data) {
+        setProfileData(responseData.data);
+      } else {
+        console.log('Error fetching data:', responseData);
+      }
+    } catch (error) {
+      console.log('Error fetching profile data:', error);
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      getProfileInfo();
+      return () => {};
+    }, []),
+  );
+
+  const navigateToContact = () => {
+    navigation.navigate('Signup', {data: profileData});
+  };
+
   return (
-    <View
-      style={{
-        flex: 1,
-        flexGrow: 1,
-        justifyContent: 'center',
-        backgroundColor: '#EAE9E5',
-      }}>
-      <View
-        style={{
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}>
-        <Image style={styles.profileImage} source={logo} />
-        <Text
+    <View style={{flex: 1, marginTop: 30}}>
+      <ScrollView contentContainerStyle={styles.container}>
+        <View style={{alignItems: 'center'}}>
+          <Image style={styles.profileImage} source={logo} />
+          <Text style={{fontSize: 16, fontWeight: '500', color: 'black'}}>
+            {profileData && profileData.contact ? profileData.contact : 'null'}
+          </Text>
+        </View>
+        <View
           style={{
-            fontSize: 20,
-            fontWeight: '500',
-            color: 'black',
-            marginTop: 10,
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
           }}>
-          {userEmail}
-        </Text>
-      </View>
-      {/* 
+          <TouchableOpacity
+            style={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 10,
+              marginHorizontal: 5,
+            }}
+            onPress={navigateToContact}>
+            <Text
+              style={{
+                backgroundColor: '#fff',
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                borderRadius: 20,
+                fontWeight: '600',
+                color: 'black',
+              }}>
+              Edit
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{
+              justifyContent: 'flex-end',
+              alignItems: 'center',
+              marginTop: 10,
+              marginHorizontal: 5,
+            }}
+            onPress={navigateToLoginWithClearStorage}>
+            <Text
+              style={{
+                backgroundColor: '#fff',
+                paddingHorizontal: 15,
+                paddingVertical: 10,
+                borderRadius: 20,
+                fontWeight: '600',
+                color: 'black',
+              }}>
+              Logout
+            </Text>
+          </TouchableOpacity>
+        </View>
+
         <View style={styles.personalInfo}>
           <View style={styles.infoRow}>
             <Text style={styles.infoTextHeading}>Name:</Text>
-            <Text style={styles.infoText}>Brandan Moore</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.full_name
+                ? profileData.full_name
+                : 'null'}
+            </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoTextHeading}>Movile:</Text>
-            <Text style={styles.infoText}>+91 889835323</Text>
+            <Text style={styles.infoTextHeading}>Mobile No:</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.contact
+                ? profileData.contact
+                : 'null'}
+            </Text>
           </View>
           <View style={styles.infoRow}>
             <Text style={styles.infoTextHeading}>Email:</Text>
-            <Text style={styles.infoText}>brendan@gmail.com</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.email ? profileData.email : 'null'}
+            </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoTextHeading}>company Name:</Text>
-            <Text style={styles.infoText}>Moore IT Services</Text>
+            <Text style={styles.infoTextHeading}>Company Name:</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.company_name
+                ? profileData.company_name
+                : 'null'}
+            </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoTextHeading}>Industry:</Text>
-            <Text style={styles.infoText}>IT Industry</Text>
+            <Text style={styles.infoTextHeading}>Designation:</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.designation
+                ? profileData.designation
+                : 'null'}
+            </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoTextHeading}>Location:</Text>
-            <Text style={styles.infoText}>Chennai, India</Text>
+            <Text style={styles.infoTextHeading}>Company Address:</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.address
+                ? profileData.address
+                : 'null'}
+            </Text>
           </View>
           <View style={styles.infoRow}>
-            <Text style={styles.infoTextHeading}>Comapny Address:</Text>
-            <Text style={styles.infoText}>Perfect Square, Chennai India</Text>
+            <Text style={styles.infoTextHeading}>About :</Text>
+            <Text style={styles.infoText}>
+              {profileData && profileData.about ? profileData.about : 'null'}
+            </Text>
           </View>
-          <View style={styles.infoRow}>
-            <Text style={styles.infoTextHeading}>Member Since:</Text>
-            <Text style={styles.infoText}>12/11/2016</Text>
-          </View>
-        </View> */}
-
-      <TouchableOpacity
-        style={{
-          justifyContent: 'flex-end',
-          alignItems: 'center',
-          marginTop: 10,
-        }}
-        onPress={navigateToLoginWithClearStorage}>
-        <Text
-          style={{
-            backgroundColor: '#fff',
-            paddingHorizontal: 15,
-            paddingVertical: 10,
-            borderRadius: 20,
-            fontWeight: '600',
-            color: 'black',
-          }}>
-          Logout
-        </Text>
-      </TouchableOpacity>
+        </View>
+      </ScrollView>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {},
+  container: {
+    justifyContent: 'center',
+    // alignItems: 'center',
+  },
   button: {
     margin: 10,
     padding: 10,
     width: 100,
-    backgroundColor: 'lightblue',
+    // backgroundColor: 'lightblue',
     alignItems: 'center',
   },
   profileImage: {
@@ -139,7 +210,7 @@ const styles = StyleSheet.create({
   },
   personalInfo: {
     marginStart: 15,
-    // marginTop: 20,
+    marginTop: 20,
     marginBottom: 30,
     flex: 1,
     justifyContent: 'space-evenly',

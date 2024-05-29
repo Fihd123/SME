@@ -11,23 +11,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Main = () => {
   const {isLoggedIn, setIsLoggedIn} = useContext(NavigationContext);
   const Stack = createNativeStackNavigator();
-  console.log(isLoggedIn);
-  // useEffect(() => {
-  //   const checkLoginStatus = async () => {
-  //     try {
-  //       const storedEmail = await AsyncStorage.getItem('userEmail');
-  //       if (storedEmail) {
-  //         setIsLoggedIn(true);
-  //       } else {
-  //         setIsLoggedIn(false);
-  //       }
-  //     } catch (error) {
-  //       console.error('Error checking login status:', error);
-  //     }
-  //   };
-
-  //   checkLoginStatus();
-  // }, []);
 
   return (
     <SafeAreaView style={{flex: 1, overflow: 'hidden'}}>

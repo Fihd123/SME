@@ -35,38 +35,17 @@ const EventCard = ({item, onPress, index}) => {
           source={{uri: thumbnailUrl ? thumbnailUrl : item.image}}
           onError={handleThumbnailError}
         />
-        <Text style={styles.title}>{item.title.slice(0, 30)}</Text>
+        <Text style={styles.title}>{item.title.slice(0, 18)}...</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
 function ForthComingEvents({navigation}) {
-  const navigateToDetail = item => {
-    navigation.navigate('eventDetails', {itemId: item.id, item});
-  };
-
-  const renderGridItem = ({item}) => (
-    <EventCard item={item} onPress={() => navigateToDetail(item)} />
-  );
-
-  return (
-    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
-      <FlatList
-        data={[...ENTRIES1]}
-        numColumns={2}
-        renderItem={renderGridItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    </View>
-  );
-}
-
-function PastEvents({navigation}) {
   const [pastEvents, setPastEvents] = useState([]);
 
   const navigateToDetail = item => {
-    navigation.navigate('eventDetails', {itemId: item.id, item});
+    navigation.navigate('eventDetails', {id: item.id, item});
   };
 
   const renderGridItem = ({item}) => (
@@ -79,7 +58,7 @@ function PastEvents({navigation}) {
         const userToken = await AsyncStorage.getItem('userToken');
 
         const response = await fetch(
-          'https://smeapp.havock.org/api/past-events',
+          'https://smeapp.havock.org/api/upcoming-events',
           {
             method: 'GET',
             headers: {
@@ -92,12 +71,7 @@ function PastEvents({navigation}) {
 
         if (response.ok) {
           const data = await response.json();
-          console.log(response);
-          console.log('User token', userToken);
           setPastEvents(data);
-          data.forEach(item => {
-            console.log('Event ID:', item.id);
-          });
         } else {
           console.error('Error fetching data:', response.statusText);
         }
@@ -120,6 +94,60 @@ function PastEvents({navigation}) {
     </View>
   );
 }
+
+const PastEvents = ({navigation}) => {
+  const [pastEvents, setPastEvents] = useState([]);
+
+  const fetchPastEvents = async () => {
+    try {
+      const userToken = await AsyncStorage.getItem('userToken');
+      const response = await fetch(
+        'https://smeapp.havock.org/api/past-events',
+        {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        },
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+        setPastEvents(data);
+      } else {
+        console.error('Error fetching data:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPastEvents();
+  }, []);
+
+  const navigateToDetail = item => {
+    navigation.navigate('eventDetails', {id: item.id, item});
+  };
+
+  const renderGridItem = ({item}) => (
+    <EventCard item={item} onPress={() => navigateToDetail(item)} />
+  );
+
+  return (
+    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
+      <FlatList
+        data={pastEvents}
+        numColumns={2}
+        renderItem={renderGridItem}
+        keyExtractor={item => item.id.toString()}
+        contentContainerStyle={styles.flatListContent}
+      />
+    </View>
+  );
+};
 
 const Events = () => {
   const Tab = createMaterialTopTabNavigator();
@@ -163,7 +191,13 @@ const Events = () => {
           <Tab.Screen
             name="ForthComingEvents"
             component={ForthComingEvents}
-            options={{tabBarLabel: 'Upcoming'}}
+            options={{
+              tabBarLabel: 'ForthComing',
+              tabBarLabelStyle: {
+                marginLeft: 5,
+                fontWeight: '600',
+              },
+            }}
           />
           <Tab.Screen
             name="PastEvents"

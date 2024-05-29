@@ -32,7 +32,6 @@ const NewsDetailsScreen = ({route}) => {
     const fetchSingleNews = async () => {
       try {
         const userToken = await AsyncStorage.getItem('userToken');
-        console.log(itemId);
 
         const response = await axios.get(
           `https://smeapp.havock.org/api/view-post/${itemId}`,

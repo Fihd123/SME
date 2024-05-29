@@ -1,12 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {useEffect, useState} from 'react';
-import {Dimensions, ScrollView, Text, View} from 'react-native';
+import {useContext, useEffect, useState} from 'react';
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import HTML from 'react-native-render-html';
+import {NavigationContext} from '../../Context/NavigationContext';
 
 const SupportDetailsPage = ({route}) => {
   const [data, setData] = useState();
   const {itemId} = route.params;
+  const {loading, setLoading} = useContext(NavigationContext);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -23,11 +31,21 @@ const SupportDetailsPage = ({route}) => {
         }
       } catch (error) {
         console.log('Error fetching data:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDetails();
   }, [itemId]);
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#EAE9E5'}}>

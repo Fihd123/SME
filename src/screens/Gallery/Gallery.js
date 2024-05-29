@@ -19,7 +19,10 @@ import img1 from '../../assets/img1.png';
 import img3 from '../../assets/img3.png';
 import img4 from '../../assets/img4.png';
 
-const ConfCard = ({item, onPress, index}) => {
+const defaultImage =
+  'https://smeapp.havock.org/uploads/event%20image/31/SME_LOGO.png';
+
+const EventCard = ({item, onPress, index}) => {
   const [thumbnailUrl, setThumbnailUrl] = useState(item.thumbnail);
 
   const handleThumbnailError = () => {
@@ -27,106 +30,44 @@ const ConfCard = ({item, onPress, index}) => {
   };
 
   return (
-    <TouchableOpacity style={styles.parentCard}>
+    <TouchableOpacity style={styles.parentCard} onPress={onPress}>
       <View style={[styles.card, styles.eventCard]}>
         <Image
+          key={index}
           style={styles.images}
-          source={{uri: thumbnailUrl ? thumbnailUrl : item.image}}
+          source={{uri: item.new_image || defaultImage}}
           onError={handleThumbnailError}
         />
-        <Text style={styles.title}>{item.title.slice(0, 30)}</Text>
+
+        <Text style={styles.title}>{item.title.slice(0, 18)}...</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-function ForthComingConferences({navigation}) {
-  const navigateToDetail = item => {
-    navigation.navigate('galleryDetails', {item});
-  };
-
-  const renderGridItem = ({item}) => <ConfCard item={item} />;
-
-  return (
-    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
-      <FlatList
-        data={[...ENTRIES1]}
-        numColumns={2}
-        renderItem={renderGridItem}
-        keyExtractor={(item, index) => index.toString()}
-      />
-    </View>
-  );
-}
-
-function PastConferences({navigation}) {
-  const [pastConf, setPastconf] = useState([]);
+function Photos({navigation}) {
+  const [photos, setPhotos] = useState([]);
   const [modalVisible, setModalVisible] = useState(false);
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null); // Change to null
 
-  const handleVideoPress = url => {
-    if (url) {
-      Linking.openURL(url);
-    }
-  };
-
-  const videoItem = [
-    {
-      id: 1,
-      title: 'SME MANUFACTURERS AND EXPORTERS SUMIIT - Session - II',
-      image: img4,
-      url: 'https://www.youtube.com/watch?v=N3MWn576AP4',
-    },
-    {
-      id: 2,
-      title:
-        'SME BUISINESS FORUM MEET - How to increase your sales with the help of CRM | 20 March 2024',
-      image: img1,
-      url: 'https://www.youtube.com/watch?v=EA7xOaeCvxs',
-    },
-    {
-      id: 3,
-      title:
-        'SME INDUSTRY SUMMIT - Panel Discussion on SME’s Digitization Growth Strategy',
-      image: img2,
-      url: 'https://www.youtube.com/watch?v=KaFQQmmyHac',
-    },
-    {
-      id: 4,
-      title:
-        'MARATHI BUSINESS FORUM - Supporting Marathi Entrepreneurs for better business growth',
-      image: img3,
-      url: 'https://www.youtube.com/watch?v=SrlLcklD5ps',
-    },
-  ];
-
-  const openImageModal = image => {
-    setSelectedImage(image);
+  const handleSelected = item => {
     setModalVisible(true);
+    setSelectedImage(item.new_image);
   };
 
-  const closeImageModal = () => {
+  const renderGridItem = ({item}) => (
+    <EventCard item={item} onPress={() => handleSelected(item)} />
+  );
+
+  const closeModal = () => {
     setModalVisible(false);
   };
 
-  const renderItem = ({item}) => {
-    return (
-      <TouchableOpacity
-        style={styles.parentCard}
-        onPress={() => handleVideoPress(item.url)}>
-        <View style={styles.card}>
-          <Image style={styles.images} source={item.image} resizeMode="cover" />
-
-          <Text style={styles.title}>{item.title.slice(0, 20)}...</Text>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
   useEffect(() => {
-    const fetchPastConf = async () => {
+    const fetchPastEvents = async () => {
       try {
         const userToken = await AsyncStorage.getItem('userToken');
+
         const response = await fetch('https://smeapp.havock.org/api/albums', {
           method: 'GET',
           headers: {
@@ -138,13 +79,7 @@ function PastConferences({navigation}) {
 
         if (response.ok) {
           const data = await response.json();
-
-          // Log the gallery images for each item in the data
-          // data.forEach(item => {
-          //   console.log('Gallery images:', item.gallery_image);
-          // });
-
-          setPastconf(data);
+          setPhotos(data);
         } else {
           console.error('Error fetching data:', response.statusText);
         }
@@ -153,31 +88,95 @@ function PastConferences({navigation}) {
       }
     };
 
-    fetchPastConf();
+    fetchPastEvents();
   }, []);
 
   return (
     <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
       <FlatList
-        data={videoItem}
-        renderItem={renderItem}
-        keyExtractor={(item, index) => index.toString()}
-        showsHorizontalScrollIndicator={false}
+        data={photos}
         numColumns={2}
+        renderItem={renderGridItem}
+        keyExtractor={item => item.id.toString()}
       />
+
       <Modal
         visible={modalVisible}
         transparent={true}
-        onRequestClose={closeImageModal}>
+        onRequestClose={closeModal}>
         <View style={styles.modalContainer}>
           <TouchableOpacity
             style={styles.modalCloseButton}
-            onPress={closeImageModal}>
+            onPress={closeModal}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
           <Image source={{uri: selectedImage}} style={styles.modalImage} />
         </View>
       </Modal>
+    </View>
+  );
+}
+
+function Videos({navigation}) {
+  const [videos, setVideos] = useState([]);
+
+  const handleVideoPress = video_url => {
+    if (video_url) {
+      Linking.openURL(video_url);
+    }
+  };
+  const renderItem = ({item}) => {
+    return (
+      <TouchableOpacity
+        style={styles.parentCard}
+        onPress={() => handleVideoPress(item.video_url)}>
+        <View style={styles.card}>
+          <Image
+            style={styles.images}
+            source={{uri: item.new_image || defaultImage}}
+          />
+
+          <Text style={styles.title}>{item.title.slice(0, 20)}...</Text>
+        </View>
+      </TouchableOpacity>
+    );
+  };
+  useEffect(() => {
+    const fetchPastEvents = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+
+        const response = await fetch('https://smeapp.havock.org/api/videos', {
+          method: 'GET',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userToken}`,
+          },
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          setVideos(data);
+        } else {
+          console.error('Error fetching data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchPastEvents();
+  }, []);
+
+  return (
+    <View style={{flex: 1, paddingTop: 10, backgroundColor: '#EAE9E5'}}>
+      <FlatList
+        data={videos}
+        numColumns={2}
+        renderItem={renderItem}
+        keyExtractor={item => item.id.toString()}
+      />
     </View>
   );
 }
@@ -224,12 +223,12 @@ const Gallery = () => {
           }}>
           <Tab.Screen
             name="Photos"
-            component={ForthComingConferences}
+            component={Photos}
             options={{tabBarLabel: 'Photos'}}
           />
           <Tab.Screen
             name="Videos"
-            component={PastConferences}
+            component={Videos}
             options={{tabBarLabel: 'Videos'}}
           />
         </Tab.Navigator>
@@ -278,7 +277,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Semi-transparent black background
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   modalCloseButton: {
     position: 'absolute',
@@ -291,8 +290,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   modalImage: {
-    width: Dimensions.get('window').width - 40, // Take full width minus some padding
-    height: Dimensions.get('window').height - 80, // Take full height minus some padding
-    resizeMode: 'contain', // Ensure the image fits inside the modal
+    width: Dimensions.get('window').width - 50,
+    resizeMode: 'contain',
+    height: 400,
   },
 });

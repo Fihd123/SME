@@ -1,12 +1,14 @@
 import React, {createContext, useContext, useState} from 'react';
-import NavigationContainerWrapper from '../Navigation/LoginStack';
-import StackRoutes from '../Navigation/LoginStack';
 
 export const NavigationContext = createContext();
 
 export const NavigationProvider = ({children}) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+  const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState(true);
+  const [userId, setUserId] = useState(true);
+  const [userToken, setUserToken] = useState(null);
+  const [profileData, setProfileData] = useState({});
   const updateLogin = () => {
     setIsLoggedIn(true);
   };
@@ -14,6 +16,16 @@ export const NavigationProvider = ({children}) => {
     isLoggedIn,
     setIsLoggedIn,
     updateLogin,
+    loading,
+    setLoading,
+    email,
+    setEmail,
+    userId,
+    setUserId,
+    userToken,
+    setUserToken,
+    profileData,
+    setProfileData,
   };
   return (
     <NavigationContext.Provider value={value}>

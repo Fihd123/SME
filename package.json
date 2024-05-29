@@ -1,5 +1,5 @@
 {
-  "name": "Awesome01",
+  "name": "smeapp",
   "version": "0.0.1",
   "private": true,
   "scripts": {
@@ -12,6 +12,7 @@
   "dependencies": {
     "@react-native-async-storage/async-storage": "^1.21.0",
     "@react-native-community/masked-view": "^0.1.11",
+    "@react-native-community/netinfo": "^11.3.1",
     "@react-native-community/push-notification-ios": "^1.11.0",
     "@react-native-firebase/app": "^19.0.1",
     "@react-native-firebase/messaging": "^19.0.1",

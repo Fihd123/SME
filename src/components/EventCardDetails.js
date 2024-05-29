@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -6,85 +6,141 @@ import {
   StyleSheet,
   ScrollView,
   Dimensions,
+  ActivityIndicator,
 } from 'react-native';
 import HTML from 'react-native-render-html';
 import AntDesign from 'react-native-vector-icons/AntDesign';
-import img from '../assets/login-bg.jpg';
 import * as ProgressBar from 'react-native-progress';
 import {useNavigation} from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-function Index(props) {
+function Index({props, route}) {
   const {width: screenWidth} = Dimensions.get('window');
-  const long_desc =
-    "<p style='text-align:justify'><strong><span>SME Business Forum, a premium business networking platform would like to provide opportunities to connect and communicate with the entrepreneurs, senior executives, buyers, suppliers, manufacturers, exporters, service providers and representatives from the various business fields to explore various emerging business opportunities related to supply, procurement, sourcing,  marketing, branding, promotion and establish strategic business partnership with the potential enterprises to receive &amp; exchange business leads &amp; referrals as well as connect with the investors, bankers and financial consultants to fulfil your financial &amp; investment requirements.</span></strong></p>";
-
+  const {id} = route.params;
   const navigate = useNavigation();
-  const navigateToBack = () => {
-    navigate.goBack();
-  };
+  const [eventDetail, setEventDetails] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchEventDetails = async () => {
+      try {
+        const userToken = await AsyncStorage.getItem('userToken');
+        const response = await fetch(
+          `https://smeapp.havock.org/api/view-event/${id}?api_token=${userToken}`,
+          {
+            method: 'GET',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${userToken}`,
+            },
+          },
+        );
+
+        if (response.ok) {
+          const data = await response.json();
+          const encodedData = data.map(item => ({
+            ...item,
+            thumbnail: item.thumbnail
+              ? encodeURIComponent(item.thumbnail)
+              : null,
+          }));
+          setEventDetails(data);
+          setLoading(false);
+        } else {
+          console.error('Error fetching data:', response.statusText);
+        }
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+
+    fetchEventDetails();
+  }, [id]);
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
   return (
     <ScrollView style={styles.container}>
-      <Text onPress={() => navigateToBack()} style={styles.cut}>
+      <Text onPress={() => navigate.goBack()} style={styles.cut}>
         <AntDesign name="arrowleft" size={30} color="black" />
       </Text>
-      <View>
-        <View style={styles.imageContainer}>
-          <Image style={styles.image} source={img} />
-          <Text style={styles.title}>
-            SME BUSINESS FORUM Focus on : Connect | Communicate | Brand | Source
-          </Text>
-        </View>
-        <ProgressBar.Bar
-          progress={0.3}
-          width={screenWidth - 56}
-          height={4}
-          backgroundColor="#E6D88D"
-          color="#2EBFAE"
-          borderWidth={0}
-          marginHorizontal={28}
-          marginTop={10}
-        />
-        <View
-          style={{
-            flexDirection: 'row',
-            paddingHorizontal: 28,
-            justifyContent: 'flex-start',
-            marginTop: 10,
-          }}>
-          <Text style={{marginRight: 15, color: 'black'}}>
-            Date:{' '}
-            <Text style={{fontWeight: '600', color: 'black'}}>20-07-2023</Text>
-          </Text>
-          <Text style={{color: 'black'}}>
-            Updated at:{' '}
-            <Text style={{fontWeight: '600', color: 'black'}}>23-06-2023</Text>
-          </Text>
-        </View>
 
-        <View
-          style={{
-            paddingHorizontal: 27,
-            marginTop: 15,
-          }}>
-          <Text style={{color: 'black'}}>Venue:</Text>
-
-          <Text style={{fontWeight: '600', marginTop: 5, color: 'black'}}>
-            SME Samvad Conference Hall, MIDC, Andheri East, Mumbai
-          </Text>
-          <View style={{marginTop: 20}}>
-            <HTML
-              source={{html: long_desc}}
-              baseStyle={{
-                fontSize: 15,
-                fontWeight: '400',
-                lineHeight: 22,
-                color: 'black',
+      {eventDetail.map((item, index) => (
+        <View key={index}>
+          <View style={styles.imageContainer}>
+            <Image
+              style={styles.image}
+              source={{
+                uri:
+                  item.thumbnail ||
+                  'https://smeapp.havock.org/front_web/images/default.jpg',
               }}
-              contentWidth={Dimensions.get('window').width}
             />
+
+            <Text style={styles.title}>{item.title}</Text>
+          </View>
+          <ProgressBar.Bar
+            progress={0.3}
+            width={screenWidth - 56}
+            height={4}
+            backgroundColor="#E6D88D"
+            color="#2EBFAE"
+            borderWidth={0}
+            marginHorizontal={28}
+            marginTop={10}
+          />
+          <View
+            style={{
+              flexDirection: 'row',
+              paddingHorizontal: 28,
+              justifyContent: 'flex-start',
+              marginTop: 10,
+            }}>
+            <Text style={{marginRight: 15, color: 'black'}}>
+              Date:{' '}
+              <Text style={{fontWeight: '600', color: 'black'}}>
+                {item.date}
+              </Text>
+            </Text>
+            <Text style={{color: 'black'}}>
+              Updated at:{' '}
+              <Text style={{fontWeight: '600', color: 'black'}}>
+                {item.updated_at.slice(0, 9)}
+              </Text>
+            </Text>
+          </View>
+
+          <View
+            style={{
+              paddingHorizontal: 27,
+              marginTop: 15,
+            }}>
+            <Text style={{color: 'black'}}>Venue:</Text>
+
+            <Text style={{fontWeight: '600', marginTop: 5, color: 'black'}}>
+              {item.short_desc}
+            </Text>
+            <View style={{marginTop: 20}}>
+              <HTML
+                source={{html: item.long_desc}}
+                baseStyle={{
+                  fontSize: 15,
+                  fontWeight: '400',
+                  lineHeight: 22,
+                  color: 'black',
+                }}
+                contentWidth={Dimensions.get('window').width}
+              />
+            </View>
           </View>
         </View>
-      </View>
+      ))}
     </ScrollView>
   );
 }

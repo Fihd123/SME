@@ -1,13 +1,20 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {useEffect, useState} from 'react';
-import {Dimensions, ScrollView, Text, View} from 'react-native';
+import {useContext, useEffect, useState} from 'react';
+import {
+  Dimensions,
+  ScrollView,
+  Text,
+  View,
+  ActivityIndicator,
+} from 'react-native';
 import HTML from 'react-native-render-html';
+import {NavigationContext} from '../../Context/NavigationContext';
 
 const ScmDetails = ({route}) => {
   const [data, setData] = useState();
+  const {loading, setLoading} = useContext(NavigationContext);
   const {itemId} = route.params;
-  console.log('Inter', itemId);
 
   useEffect(() => {
     const fetchDetails = async () => {
@@ -24,11 +31,21 @@ const ScmDetails = ({route}) => {
         }
       } catch (error) {
         console.log('Error fetching data:', error.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchDetails();
   }, [itemId]);
+
+  if (loading) {
+    return (
+      <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+        <ActivityIndicator size="large" color="#0000ff" />
+      </View>
+    );
+  }
 
   return (
     <ScrollView style={{flex: 1, backgroundColor: '#EAE9E5'}}>

@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from 'react';
-import {SafeAreaView, Platform} from 'react-native';
+import {SafeAreaView, Platform, View, Text, Pressable} from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import messaging, {
   FirebaseMessagingTypes,
@@ -10,10 +10,13 @@ import SplashScreen from './src/screens/SplashScreen';
 import Main from './src/Navigation/Main';
 import {NavigationProvider} from './src/Context/NavigationContext';
 import PushNotificationIOS from '@react-native-community/push-notification-ios';
+import {useNetInfo} from '@react-native-community/netinfo';
+import {TouchableOpacity} from 'react-native-gesture-handler';
 
 const App = () => {
   const [message, setMessage] = useState([]);
   const [splash, setSplash] = useState(true);
+  const netInfo = useNetInfo();
 
   useEffect(() => {
     setTimeout(() => {
@@ -24,7 +27,7 @@ const App = () => {
   useEffect(() => {
     const getToken = async () => {
       const token = await firebase.messaging().getToken();
-      console.log('Token:', token);
+      // console.log('Token:', token);
     };
     getToken();
   }, []);
@@ -64,13 +67,11 @@ const App = () => {
   };
 
   const showNotification = (notification: any) => {
-    console.log('showing notification ');
+    // console.log('showing notification ');
     console.log(JSON.stringify(notification));
 
-    // Set notification priority to high
     const priority = Platform.OS === 'android' ? 'high' : undefined;
 
-    // Specify the channel ID if needed
     const channelId = Platform.OS === 'android' ? 'test' : undefined;
     PushNotification.localNotification({
       title: notification.title,
@@ -90,7 +91,19 @@ const App = () => {
     <SafeAreaView style={{flex: 1, overflow: 'hidden'}}>
       <NavigationProvider>
         <NavigationContainer>
-          {splash ? <SplashScreen /> : <Main />}
+          {splash ? (
+            <SplashScreen />
+          ) : netInfo.isConnected ? (
+            <Main />
+          ) : (
+            <View
+              style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
+              <Text>Oops! Mobile Network is not Available</Text>
+              <Pressable style={{marginTop: 10}}>
+                <Text>Try Again Later </Text>
+              </Pressable>
+            </View>
+          )}
         </NavigationContainer>
       </NavigationProvider>
     </SafeAreaView>

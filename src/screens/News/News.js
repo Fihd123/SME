@@ -40,7 +40,6 @@ const CarouselComponent = () => {
             },
           },
         );
-        console.log('user token', userToken);
 
         if (response.ok) {
           const data = await response.json();
